@@ -1,0 +1,16 @@
+<extension xmlns="http://ns.adobe.com/air/extension/2.5">
+	<id>com.air.extension.ario</id>
+	<versionNumber>0.1</versionNumber>
+	<platforms> 
+		<platform name="Windows-x86">
+			<applicationDeployment>
+				<nativeLibrary>FRESteamWorks.dll</nativeLibrary>
+				<initializer>ExtInitializerFRESteamWorks</initializer>
+				<finalizer>ExtFinalizerFRESteamWorks</finalizer>
+			</applicationDeployment>
+		</platform> 
+		<platform name="default"> <!-- This value indicates that the extension is an ActionScript-only extension; the extension has no native code libraries. -->
+			<applicationDeployment/>
+		</platform>
+	</platforms>
+</extension>
