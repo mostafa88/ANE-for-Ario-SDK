@@ -4,9 +4,9 @@
 	<platforms> 
 		<platform name="Windows-x86">
 			<applicationDeployment>
-				<nativeLibrary>FRESteamWorks.dll</nativeLibrary>
-				<initializer>ExtInitializerFRESteamWorks</initializer>
-				<finalizer>ExtFinalizerFRESteamWorks</finalizer>
+				<nativeLibrary>ArioANE.dll</nativeLibrary>
+				<initializer>ExtensionInitializer</initializer>
+				<finalizer>ExtensionFinalizer</finalizer>
 			</applicationDeployment>
 		</platform> 
 		<platform name="default"> <!-- This value indicates that the extension is an ActionScript-only extension; the extension has no native code libraries. -->

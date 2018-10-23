@@ -3,8 +3,8 @@
 					   xmlns:s="library://ns.adobe.com/flex/spark" 
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
 					   title="Ario Test SDK"
-					   width="400"
-					   height="600"
+					   width="350"
+					   height="700"
 					   initialize = "reportEvent(event)"
 					   preinitialize = "reportEvent(event)"
 					   creationComplete = "reportEvent(event)"
@@ -24,25 +24,72 @@
 	<fx:Script>
 		<![CDATA[
 			import com.ario.extension.ArioInterface;
+			
 			import mx.events.FlexEvent;
 			
+			public static var nativeInstance:ArioInterface;
 			
-			protected function btnClickMe_clickHandler(event:MouseEvent):void {
+			protected function btnSynch_clickHandler(event:MouseEvent):void {
 				//Alert.show("Hello World!");
 				
 				lblHeader.text = "clicked!"
-				var instance:ArioInterface = new ArioInterface();
-				trace(instance.add(3,5));
-				lblHeader.text = instance.add(3,5).toString();
-					
+				var result:String = nativeInstance.isSupported();
+				trace(result);
+				lblHeader.text = result;
 			}
+			protected function btnASynch_clickHandler(event:MouseEvent):void {
+				//Alert.show("Hello World!");
+				
+				nativeInstance.isSupportedAsynch();
+			}
+			
 			
 			[Bindable]
 			private var report:String = "";
 			
 			private function reportEvent(event:FlexEvent):void {
-				report += "\n" + (event.type + " event occured at: " 
-					+ getTimer() + " ms" + "\n");
+				switch(event.type)
+				{
+					case "preinitialize":
+					{
+						onPreInitialize();
+						break;
+					}
+					case "initialize":
+					{
+						onInitialize();
+						break;
+					}
+					case "creationComplete":
+					{
+						onCreateComplete();
+						break;
+					}
+					case "applicationComplete":
+					{
+						onApplicationComplete();
+						break;
+					}
+					default:
+					{
+						break;
+					}
+				}
+				
+			}
+			private function onInitialize():void 
+			{
+				
+			}
+			private function onPreInitialize():void 
+			{
+			}
+			private function onCreateComplete():void 
+			{	
+			}
+			private function onApplicationComplete():void
+			{
+				nativeInstance = new ArioInterface();
 			}
 		]]>
 	</fx:Script>
@@ -54,8 +101,10 @@
 		<s:TextArea id = "reportText" text = "{report}" editable = "false" 
 					width = "300" height = "200">				
 		</s:TextArea>			
-		<s:Button label = "Click Me!" id = "btnClickMe" 
-				  click = "btnClickMe_clickHandler(event)" />
+		<s:Button label = "Synch Test!" id = "btnSynch" 
+				  click = "btnSynch_clickHandler(event)" />
+		<s:Button label = "Asynch Test" id = "btnAsynch" 
+				  click = "btnASynch_clickHandler(event)" />
 	</s:VGroup>
 	
 	
