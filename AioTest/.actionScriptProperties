@@ -10,7 +10,7 @@
         </excludedEntries>
       </libraryPathEntry>
       <libraryPathEntry kind="1" linkType="2" path="libs"/>
-      <libraryPathEntry kind="5" linkType="2" path="${DOCUMENTS}/ArioANE/arioAirextension.ane"/>
+      <libraryPathEntry kind="5" linkType="2" path="D:/Users/Mostafa/ANE-for-Ario-SDK/ArioANE/arioAirextension.ane"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>
@@ -28,7 +28,7 @@
       <airSettings airCertificatePath="D:/Users/Mostafa/Documents/ario-test-adobeair-certificate.p12" airTimestamp="false" anePathSet="true" version="1">
         <airExcludes/>
         <anePaths>
-          <anePathEntry path="${DOCUMENTS}/ArioANE/arioAirextension.ane"/>
+          <anePathEntry path="D:/Users/Mostafa/ANE-for-Ario-SDK/ArioANE/arioAirextension.ane"/>
         </anePaths>
         <newLaunchParams/>
         <modifiedLaunchParams/>
