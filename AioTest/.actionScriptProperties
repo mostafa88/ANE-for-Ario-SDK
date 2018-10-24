@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<actionScriptProperties analytics="false" mainApplicationPath="AioTest.mxml" projectUUID="5fef7cc9-0108-4f02-9722-635719903916" version="11">
+<actionScriptProperties analytics="false" mainApplicationPath="com/ario/test/AioTest.mxml" projectUUID="5fef7cc9-0108-4f02-9722-635719903916" version="11">
   <compiler additionalCompilerArguments="-locale en_US" autoRSLOrdering="true" copyDependentFiles="true" fteInMXComponents="false" generateAccessible="true" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="false" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin-debug" removeUnusedRSL="true" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="true" useDebugRSLSwfs="true" useFlashSDK="false" verifyDigests="true" warn="true">
     <compilerSourcePath/>
     <libraryPath defaultLinkType="0">
@@ -15,6 +15,9 @@
     <sourceAttachmentPath/>
   </compiler>
   <applications>
+    <application path="com/ario/test/AioTest.mxml">
+      <airExcludes/>
+    </application>
     <application path="AioTest.mxml">
       <airExcludes/>
     </application>
