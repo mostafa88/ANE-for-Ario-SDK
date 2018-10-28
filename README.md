@@ -11,3 +11,9 @@ A good tutorial by example that show you how to work with a adobe air project an
 
 Developing Native Extensions: A comprehensive document to building ANE library
 3-https://help.adobe.com/en_US/air/extensions/index.html
+
+Adding external dll dependency to ANE library (3rd party dll library)
+4-https://stackoverflow.com/q/9823504/1789669
+
+A good, complete and step by step tutorial to building ANE for windows application.
+5- http://easynativeextensions.com/windows-tutorial-introduction/
