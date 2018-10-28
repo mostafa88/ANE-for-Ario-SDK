@@ -1,0 +1,172 @@
+ /*
+ *  FREConverters.cpp
+ *  This file is part of FRESteamWorks.
+ *
+ *  Created by Ventero <http://github.com/Ventero> on 2014-04-09.
+ *  Copyright (c) 2012-2014 Level Up Labs, LLC. All rights reserved.
+ */
+ 
+ /*
+ * Functions to create FREObjects from native primitives.
+ */
+ 
+ #include "FREConverters.h"
+ 
+ #include <sstream>
+ 
+ FREObject FREBool(bool value) {
+ 	FREObject result;
+ 	FRENewObjectFromBool(value, &result);
+ 	return result;
+ }
+ 
+ FREObject FREInt(int32_t value) {
+ 	FREObject result;
+ 	FRENewObjectFromInt32(value, &result);
+ 	return result;
+ }
+ 
+ FREObject FREUint(uint32_t value) {
+ 	FREObject result;
+ 	FRENewObjectFromUint32(value, &result);
+ 	return result;
+ }
+ 
+ FREObject FREDouble(double value) {
+ 	FREObject result;
+ 	FRENewObjectFromDouble(value, &result);
+ 	return result;
+ }
+ 
+ FREObject FREString(std::string value) {
+ 	FREObject result;
+ 	FRENewObjectFromUTF8(
+ 		static_cast<uint32_t>(value.size()) + 1,
+ 		(const uint8_t*)value.c_str(),
+ 		&result);
+ 	return result;
+ }
+ 
+ FREObject FREString(const char* value) {
+ 	return FREString(std::string(value));
+ }
+ 
+ FREObject FREUint64(uint64_t value) {
+ 	std::stringstream stream;
+ 	stream << value;
+ 	return FREString(stream.str());
+ }
+ 
+ FREObject FREArray(uint32_t length) {
+ 	FREObject array;
+ 	FRENewObject((const uint8_t*)"Array", 0, NULL, &array, NULL);
+ 	FRESetArrayLength(array, length);
+ 
+ 	return array;
+ }
+ 
+ FREObject FREBitmapDataFromImageRGBA(uint32_t width, uint32_t height, std::vector<uint8_t> const & argb_data)
+ {
+ 	FREObject freWidth = FREUint(width);
+ 	FREObject freHeight = FREUint(height);
+ 	FREObject freTransparent = FREUint(0);
+ 	FREObject freFillColor = FREUint(0);
+ 	FREObject freArguments[4] = { freWidth, freHeight, freTransparent, freFillColor };
+ 
+ 	FREObject bitmap_data_object;
+ 	FRENewObject((uint8_t *)"flash.display.BitmapData", 4, freArguments, &bitmap_data_object, NULL);
+ 
+ 	FREBitmapData2 bitmap_data;
+ 	FREAcquireBitmapData2(bitmap_data_object, &bitmap_data);
+ 
+ 	// There may be extra pixels in each row due to the value of
+ 	// bmd.lineStride32, we'll skip over those as needed.
+ 	uint32_t stride = bitmap_data.lineStride32;
+ 	uint32_t *row_buf = bitmap_data.bits32;
+ 
+ 	for (uint32_t y = 0; y < height; y++)
+ 	{
+ 		uint32_t src_row = bitmap_data.isInvertedY ? (height - y - 1) : y;
+ 		for (uint32_t x = 0; x < width; x++)
+ 		{
+ 			uint32_t src_index = src_row * width + x;
+ 			uint8_t alpha = argb_data[src_index * 4];
+ 			uint8_t red = argb_data[src_index * 4 + 1];
+ 			uint8_t green = argb_data[src_index * 4 + 2];
+ 			uint8_t blue = argb_data[src_index * 4 + 3];
+ 			row_buf[x] = (alpha << 24) | (red << 16) | (green << 8) | blue;
+ 		}
+ 
+ 		row_buf += stride;
+ 	}
+ 
+ 	// Release our control over the bitmapData.
+ 	FREInvalidateBitmapDataRect(bitmap_data_object, 0, 0, width, height);
+ 	FREReleaseBitmapData(bitmap_data_object);
+ 
+ 	return bitmap_data_object;
+ }
+ 
+ /*
+ * Functions to extract native primitives out of FREObjects.
+ */
+ 
+ bool FREGetString(FREObject object, std::string& str) {
+ 	uint32_t len;
+ 	const uint8_t* data;
+ 	FREResult res = FREGetObjectAsUTF8(object, &len, &data);
+ 	if (res != FRE_OK) return false;
+ 
+ 	str = std::string((const char*)data, len);
+ 	return true;
+ }
+ 
+ bool FREGetStringP(FREObject object, std::string* str) {
+ 	std::string s;
+ 	if (!FREGetString(object, s)) return false;
+ 
+ 	*str = s;
+ 	return true;
+ }
+ 
+ bool FREGetBool(FREObject object, bool* val) {
+ 	uint32_t int_val;
+ 
+ 	FREResult ret = FREGetObjectAsBool(object, &int_val);
+ 	*val = (int_val != 0);
+ 
+ 	return ret == FRE_OK;
+ }
+ 
+ bool FREGetDouble(FREObject object, double* val) {
+ 	return (FREGetObjectAsDouble(object, val) == FRE_OK);
+ }
+ 
+ bool FREGetInt32(FREObject object, int32_t* val) {
+ 	return (FREGetObjectAsInt32(object, val) == FRE_OK);
+ }
+ 
+ bool FREGetUint32(FREObject object, uint32_t* val) {
+ 	// really, Adobe ...?
+ #ifdef LINUX
+ 	return (FREGetObjectAsUInt32(object, val) == FRE_OK);
+ #else
+ 	return (FREGetObjectAsUint32(object, val) == FRE_OK);
+ #endif
+ }
+ 
+ bool FREGetUint64(FREObject object, uint64_t* val) {
+ 	std::string str;
+ 	if (!FREGetString(object, str)) return false;
+ 
+ 	// Clang doesn't support std::stoull yet...
+ 	std::istringstream ss(str);
+ 	if (!(ss >> *val)) return false;
+ 
+ 	return true;
+ }
+ 
+ // Extract a string array. For getArray<T>, see the header.
+ std::vector<std::string> extractStringArray(FREObject object) {
+ 	return getArray<std::string>(object, FREGetStringP);
+ }
