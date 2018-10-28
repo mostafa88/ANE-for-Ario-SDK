@@ -1,5 +1,6 @@
 package com.ario.test{ 
 import com.ario.extension.ArioInterface;
+import com.ario.extension.ArioResultCode;
 
 import flash.events.MouseEvent;
 
@@ -7,6 +8,7 @@ import mx.core.Application;
 import mx.core.ComponentDescriptor;
 import mx.core.FlexGlobals;
 import mx.events.FlexEvent;
+import mx.rpc.events.ResultEvent;
 
 
 
@@ -19,31 +21,34 @@ public class ArioTest {
 	private var leaderboardPublicKey:String = "eb649f9a-bb75-4dab-8fe1-29aea7e87a7a";
 	private var achievementPublickey:String = "b649f9a-bb75-4dab-8fe1-29aea7e87a7a";
 	
-	public static var nativeInstance:ArioInterface;
-	
-	
-	public function btnSynch_clickHandler(event:MouseEvent):void {
-		//Alert.show("Hello World!");
-		
-		FlexGlobals.topLevelApplication.lblHeader.text = "clicked!"
-		//var result:String = nativeInstance.isSupported();
-		// FlexGlobals.topLevelApplication.lblHeader.text = result;
-			
-		var initResult:int = nativeInstance.init(packageName,inAppPurchasePublicKey,leaderboardPublicKey,achievementPublickey);
-		FlexGlobals.topLevelApplication.lblHeader.text = initResult;
-		trace(initResult);
-	
+	//public static var nativeInstance:ArioInterface;
+
+	// user buttons
+	public function onClick_btn_user_id(event:MouseEvent):void {
+		//Alert.show("Hello World!");			
+		var userId:int = ArioInterface.User.GetId();
+		FlexGlobals.topLevelApplication.reportText.text = userId;
+		trace(userId);
 	}
-	public function btnASynch_clickHandler(event:MouseEvent):void {
-		//Alert.show("Hello World!");
-		
-		nativeInstance.isSupportedAsynch(onAsynchRecived);
+	public function onClick_btn_user_profile(event:MouseEvent):void {
+		ArioInterface.User.GetProfile(onAsynchRecived);
 	}
-	
+	public function onClick_btn_user_isLogin(event:MouseEvent):void {
+		var res:Boolean = ArioInterface.User.IsLogin();
+		FlexGlobals.topLevelApplication.reportText.text = res;
+	}
+	public function onClick_btn_user_avatar_id(event:MouseEvent):void {
+		var res:int = ArioInterface.User.GetAvatarId();
+		FlexGlobals.topLevelApplication.reportText.text = res;
+	}
+	public function onClick_btn_user_level(event:MouseEvent):void {
+		var res:int = ArioInterface.User.GetLevel();
+		FlexGlobals.topLevelApplication.reportText.text = res;
+	}
 	
 	public function onAsynchRecived(msg:String): void
 	{
-		FlexGlobals.topLevelApplication.lblHeader.text = msg;
+		FlexGlobals.topLevelApplication.reportText.text = msg;
 	}
 	
 	public function onInitialize():void 
@@ -58,7 +63,12 @@ public class ArioTest {
 	}
 	public function onApplicationComplete():void
 	{
-		nativeInstance = new ArioInterface();
+		var initResult:int = ArioInterface.Init(packageName,inAppPurchasePublicKey,leaderboardPublicKey,achievementPublickey);
+		if( initResult != ArioResultCode.RESULT_OK)
+		{
+			FlexGlobals.topLevelApplication.reportText.text = "cannot init ario, error:" + initResult;
+			trace(initResult);
+		}
 	}
 
 	}

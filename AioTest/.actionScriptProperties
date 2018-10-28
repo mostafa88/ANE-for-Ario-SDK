@@ -18,9 +18,6 @@
     <application path="com/ario/test/AioTest.mxml">
       <airExcludes/>
     </application>
-    <application path="AioTest.mxml">
-      <airExcludes/>
-    </application>
   </applications>
   <modules/>
   <workers/>
@@ -28,7 +25,7 @@
   <flashCatalyst validateFlashCatalystCompatibility="false"/>
   <buildTargets>
     <buildTarget buildTargetName="default" platformId="default">
-      <airSettings airCertificatePath="D:/Users/Mostafa/Documents/ario-test-adobeair-certificate.p12" airTimestamp="false" anePathSet="true" version="1">
+      <airSettings airCertificatePath="D:/Users/Mostafa/ANE-for-Ario-SDK/ArioANE/release-build-certificate.p12" airTimestamp="false" anePathSet="true" version="1">
         <airExcludes/>
         <anePaths>
           <anePathEntry path="D:/Users/Mostafa/ANE-for-Ario-SDK/ArioANE/arioAirextension.ane"/>

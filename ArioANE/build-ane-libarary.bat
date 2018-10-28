@@ -14,9 +14,13 @@ ECHO EXTRACTING library.swf FROM ArioANE.swc
 7z e %~dp0.\bin\ArioANE.swc -aoa -o%~dp0.\platform\ library.swf -r
 
 ECHO *************************************************************************************
-REM building ANE library
-ECHO BUILDING arioAirextension.ane
-adt -package -target ane arioAirextension.ane .\descriptor.xml -swc .\bin\ArioANE.swc -platform default -C platform library.swf -platform Windows-x86 -C platform library.swf ArioANE.dll
+REM deleting old ANE library
+SET EXTENSION_FILE_NAME=arioAirextension.ane
+ECHO DELETING LAST %EXTENSION_FILE_NAME%
+DEL %~dp0.\%EXTENSION_FILE_NAME%
 
+REM building ANE library
+ECHO BUILDING %EXTENSION_FILE_NAME%
+adt -package -target ane %EXTENSION_FILE_NAME% .\descriptor.xml -swc .\bin\ArioANE.swc -platform default -C platform library.swf -platform Windows-x86 -C platform library.swf ArioANE.dll ArioSdk.dll api-ms-win-crt-convert-l1-1-0.dll api-ms-win-crt-heap-l1-1-0.dll api-ms-win-crt-math-l1-1-0.dll api-ms-win-crt-runtime-l1-1-0.dll api-ms-win-crt-stdio-l1-1-0.dll api-ms-win-crt-string-l1-1-0.dll msvcp140.dll StoreSdk.dll vcruntime140.dll "Adobe AIR.dll" 
 POPD
 
