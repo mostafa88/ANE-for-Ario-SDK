@@ -62,17 +62,17 @@
 	</fx:Script>
 	
 	<s:VGroup horizontalAlign = "center" width = "100%" height = "30%"  paddingTop = "10" gap = "10" >
-		<s:Label id = "lblHeader" fontSize = "20" text="Ario Test Air Game :)" width="80%" color = "0x777777"  />
+		<s:Label id = "lblHeader" textAlign="center" fontSize = "20" text="Ario Sample Game To  Test Air SDK :)" width="80%" color = "0x777777"  />
 		<s:TextArea id = "reportText" text = "..." editable = "false" width = "300" height = "200" />
 		
 		<s:HGroup verticalAlign="middle" width = "100%" height = "30%"  paddingLeft="10" gap = "10">
 			<s:VGroup horizontalAlign = "center" width = "100%" height = "100%"  paddingTop = "10" gap = "10">
 				<s:Label id = "lbl_user" textAlign="center" fontSize = "20" text="User Service" width="100%" color = "0x777777"  />
-				<s:Button label = "user id" id = "btn_user_id"  click = "arioTest.onClick_btn_user_id(event)" />
-				<s:Button label = "profile" id = "btn_user_profile"  click = "arioTest.onClick_btn_user_profile(event)" />
 				<s:Button label = "check login" id = "btn_user_isLogin"  click = "arioTest.onClick_btn_user_isLogin(event)" />
+				<s:Button label = "user id" id = "btn_user_id"  click = "arioTest.onClick_btn_user_id(event)" />
 				<s:Button label = "avatar id" id = "btn_user_avatar_id"  click = "arioTest.onClick_btn_user_avatar_id(event)" />
 				<s:Button label = "user level" id = "btn_user_level"  click = "arioTest.onClick_btn_user_level(event)" />
+				<s:Button label = "profile" id = "btn_user_profile"  click = "arioTest.onClick_btn_user_profile(event)" />
 			</s:VGroup>
 			<s:VGroup horizontalAlign = "center" width = "100%" height = "100%"  paddingTop = "10" gap = "10">
 				<s:Label id = "lbl_lock" textAlign="center" fontSize = "20" text="Lock Service" width="80%" color = "0x777777"  />
@@ -81,10 +81,10 @@
 			</s:VGroup>
 			<s:VGroup horizontalAlign = "center" width = "100%" height = "100%"  paddingTop = "10" gap = "10">
 				<s:Label id = "lbl_IAB" textAlign="center" fontSize = "20" text="In App Billing Service" width="80%" color = "0x777777"  />
-				<s:Button label = "user id" id = "btn_iab_lanch_purchase"  click = "arioTest.onClick_btn_user_id(event)" />
-				<s:Button label = "profile" id = "btn_iab_consume"  click = "arioTest.onClick_btn_user_profile(event)" />
-				<s:Button label = "check login" id = "btn_iab_get_inventory"  click = "arioTest.onClick_btn_user_isLogin(event)" />
-				<s:Button label = "avatar id" id = "btn_iab_get_sdkuDetails"  click = "arioTest.onClick_btn_user_avatar_id(event)" />
+				<s:Button label = "buy inapp item" id = "btn_iab_lanch_purchase"  click = "arioTest.onClick_btn_user_id(event)" />
+				<s:Button label = "consume item" id = "btn_iab_consume"  click = "arioTest.onClick_btn_user_profile(event)" />
+				<s:Button label = "get inventory" id = "btn_iab_get_inventory"  click = "arioTest.onClick_btn_user_isLogin(event)" />
+				<s:Button label = "get sku details" id = "btn_iab_get_sdkuDetails"  click = "arioTest.onClick_btn_user_avatar_id(event)" />
 			</s:VGroup>
 		</s:HGroup>
 	</s:VGroup>
