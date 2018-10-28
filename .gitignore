@@ -12,6 +12,30 @@ bin-release/
 *.air
 *.ipa
 *.apk
+*.dll
+*.ane
+*.lib
+
+# locally generated files
+*.obj
+*.iobj
+*.ilk
+*.pdb
+*.ipdb
+*.idb
+*.exp
+*.filters
+*.user
+
+# visual studio local project files
+*.opendb
+*.suo
+*.db
+
+
+# log files
+*.tlog
+*.log
 
 # Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
 # should NOT be excluded as they contain compiler settings and other important
