@@ -33,13 +33,31 @@ typedef int (__cdecl *Api_Init)(char* packageName);
 //Global object, Used to dispatch event back to AIR
 FREContext AIRContext;
 
-// 
-// typedef FREObject(*FREFunction)(
-// 	FREContext ctx,
-// 	void*      functionData,
-// 	uint32_t   argc,
-// 	FREObject  argv[]
-// 	);
+void ARIO_CALLING_CONVERSION JsonCallback(int requestCode, int result, int response_size)
+{
+	FREResult airResult;
+	char eventCode[32];
+	snprintf(eventCode, sizeof(eventCode), "%d", requestCode);
+
+	std::string stringResponse;
+	if (result == RESULT_OK)
+	{
+		int bufferSize = response_size;
+		char* response = new char[bufferSize];
+		GetJsonResult(requestCode, response, bufferSize);
+
+
+		airResult = FREDispatchStatusEventAsync(AIRContext, (const uint8_t*)eventCode, (const uint8_t*)response);
+		delete[] response;
+	}
+	else
+	{
+		char response[32];
+		sprintf(response, "{\"result\":%d}", result);
+		airResult = FREDispatchStatusEventAsync(AIRContext,
+			(const uint8_t*)eventCode, (const uint8_t*)response);
+	}
+}
 
 
 // description: init ario SdK
@@ -108,48 +126,11 @@ FREObject GetProfile(FREContext ctx, void* functionData, uint32_t argc, FREObjec
 	std::string reqCode;
 	bool isOk = FREGetString(argv[0],reqCode);
 
-	std::thread mahta([](int req_code)
-	{
-
-		ArioUser_GetProfile(req_code,[](int requestCode, int result, int response_size) {
-			
-			FREResult airResult;
-			char eventCode[32];
-
-			snprintf(eventCode, sizeof(eventCode), "%d", requestCode);
-			
-			std::string stringResponse;
-			if (result == RESULT_OK)
-			{
-				int bufferSize = response_size;
-				char* response = new char[bufferSize];
-				GetJsonResult(requestCode, response, bufferSize);
-
-
-				 airResult = FREDispatchStatusEventAsync(AIRContext,
-					(const uint8_t*)eventCode, (const uint8_t*)response);
-				stringResponse = std::string(response);
-				delete[] response;
-			}
-			else
-			{
-				char reqLevel[32];
-				sprintf(reqLevel, "{\"result\":%d}", result);
-				stringResponse = std::string(reqLevel);
-				airResult = FREDispatchStatusEventAsync(AIRContext,
-					(const uint8_t*)eventCode, (const uint8_t*)reqLevel);
-			}
-			
-			
-			if (airResult != FRE_OK)
-			{
-				std::wstring msg;
-				msg = L"Error in Dispatch Event" + std::to_wstring(airResult);
-				MessageBox(NULL, msg.c_str(), L"caption", 0);
-			}
-		});
+	std::thread mahta([](int req_code) {
+		ArioUser_GetProfile(req_code, JsonCallback);
 	}, std::stoi(reqCode));
 	mahta.detach();
+
 	return FREInt(RESULT_OK);
 }
 

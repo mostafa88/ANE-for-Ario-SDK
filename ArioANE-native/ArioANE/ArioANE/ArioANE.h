@@ -18,17 +18,22 @@
 #define EXPORT __attribute__((visibility("default")))
 #endif
 
+// c++ headers
 #include <string>
 
+// AIR runtime headers
 #include <FlashRuntimeExtensions.h>
+// Ario headers
+#include <global_define.h>
 
 static std::string packageName;
+
 
 //// these functions set in ExtensionInitializer
 void ArioContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctions, const FRENamedFunction** functions);
 void ArioContextFinalizer(FREContext ctx);
 
-// extension functions
+// extension functions include function for following services, User, Lock, InAppPurchase, Achievement, Leaderboard
 FREObject Init(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
 // user functions
 FREObject IsLogin(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
@@ -45,6 +50,8 @@ extern "C" {
 
 }
 
+// general thread function for asynchronous function
+void ARIO_CALLING_CONVERSION JsonCallback(int requestCode, int result, int response_size);
 
 
 #endif // __ARIO_ANE_H__
