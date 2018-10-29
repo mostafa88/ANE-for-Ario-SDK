@@ -1,6 +1,8 @@
 # ANE-for-Ario-SDK
 A AIR Native Extension for Ario SDK that used by Adobe Air developers.
 
+Note: In project propertice >> actionScript LIbrary Compiler >>  Additional compiler arguments:
+add the following flag "-swf-version 13".
 
 References:
 Building ADOBE® AIR® Applications: It is a complte refrence to start understanding adobe Air and build first adobe air project
