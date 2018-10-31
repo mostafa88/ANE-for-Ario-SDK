@@ -3,7 +3,7 @@
 					   xmlns:s="library://ns.adobe.com/flex/spark" 
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
 					   title="Ario Test SDK"
-					   width="800"
+					   width="1000"
 					   height="600"
 					   initialize = "reportEvent(event)"
 					   preinitialize = "reportEvent(event)"
@@ -66,8 +66,8 @@
 		<s:TextArea id = "reportText" editable = "false" width = "500" height = "200"  />
 		<s:Button label = "clear text area" id = "btn_text_clear"  click = "arioTest.onClick_btn_clear(event)" />
 		
-		<s:HGroup verticalAlign="middle" width = "100%" height = "30%"  paddingLeft="10" gap = "10">
-			<s:VGroup horizontalAlign = "center" width = "100%" height = "100%"  paddingTop = "10" gap = "10">
+		<s:HGroup verticalAlign="middle" width = "100%" height = "30%"  paddingLeft="10" gap = "10" paddingRight="10">
+			<s:VGroup horizontalAlign = "center" width = "25%" height = "100%"  paddingTop = "10" gap = "10">
 				<s:Label id = "lbl_user" textAlign="center" fontSize = "20" text="User Service" width="100%" color = "0x777777"  />
 				<s:Button label = "check login" id = "btn_user_isLogin"  click = "arioTest.onClick_btn_user_isLogin(event)" />
 				<s:Button label = "user id" id = "btn_user_id"  click = "arioTest.onClick_btn_user_id(event)" />
@@ -75,17 +75,26 @@
 				<s:Button label = "user level" id = "btn_user_level"  click = "arioTest.onClick_btn_user_level(event)" />
 				<s:Button label = "profile" id = "btn_user_profile"  click = "arioTest.onClick_btn_user_profile(event)" />
 			</s:VGroup>
-			<s:VGroup horizontalAlign = "center" width = "100%" height = "100%"  paddingTop = "10" gap = "10">
+			<s:VGroup horizontalAlign = "center" width = "25%" height = "100%"  paddingTop = "10" gap = "10">
 				<s:Label id = "lbl_lock" textAlign="center" fontSize = "20" text="Lock Service" width="80%" color = "0x777777"  />
 				<s:Button label = "lock-synch" id = "btn_lock_synch"  click = "arioTest.onClick_btn_lock(event)" />
 				<s:Button label = "lock-asynch" id = "btn_lock_asynch"  click = "arioTest.onClick_btn_lock_asynch(event)" />
 			</s:VGroup>
-			<s:VGroup horizontalAlign = "center" width = "100%" height = "100%"  paddingTop = "10" gap = "10">
+			<s:VGroup horizontalAlign = "justify" width = "50%" height = "100%"  paddingTop = "10" gap = "10">
 				<s:Label id = "lbl_IAB" textAlign="center" fontSize = "20" text="In App Billing Service" width="80%" color = "0x777777"  />
-				<s:Button label = "buy inapp item" id = "btn_iab_lanch_purchase"  click = "arioTest.onClick_btn_user_id(event)" />
-				<s:Button label = "consume item" id = "btn_iab_consume"  click = "arioTest.onClick_btn_user_profile(event)" />
-				<s:Button label = "get inventory" id = "btn_iab_get_inventory"  click = "arioTest.onClick_btn_user_isLogin(event)" />
-				<s:Button label = "get sku details" id = "btn_iab_get_sdkuDetails"  click = "arioTest.onClick_btn_user_avatar_id(event)" />
+				<s:HGroup>
+					<s:Button label = "get sku details" id = "btn_iab_get_sdkuDetails"  click = "arioTest.onClick_btn_iab_details(event)" />
+					<s:Label id = "detail_sku_lable" textAlign="center" fontSize = "18" text="sku list(comma separated):" width="80%" />
+					<s:TextInput/>
+				</s:HGroup>
+				<s:HGroup>
+					<s:Button label = "buy inapp item" id = "btn_iab_lanch_purchase"  click = "arioTest.onClick_btn_iab_buy(event)" />
+					<s:Label id = "buy_sku_lable" textAlign="center" fontSize = "18" text="sku:" width="80%" />
+					<s:TextInput/>
+				</s:HGroup>
+				<s:Button label = "consume item" id = "btn_iab_consume"  click = "arioTest.onClick_btn_iab_consume(event)" />
+				<s:Button label = "get inventory" id = "btn_iab_get_inventory"  click = "arioTest.onClick_btn_iab_inventory(event)" />
+				
 			</s:VGroup>
 		</s:HGroup>
 	</s:VGroup>

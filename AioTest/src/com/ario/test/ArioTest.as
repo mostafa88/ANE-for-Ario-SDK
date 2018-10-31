@@ -58,6 +58,20 @@ package com.ario.test{
 			ArioInterface.Lock.ValidatePurchaseAsynch(onAsynchRecived);
 		}
 		
+		// in app billing buttons
+		public function onClick_btn_iab_details(event:MouseEvent):void {
+			
+		}
+		public function onClick_btn_iab_buy(event:MouseEvent):void {
+			
+		}
+		public function onClick_btn_iab_consume(event:MouseEvent):void {
+			
+		}
+		public function onClick_btn_iab_inventory(event:MouseEvent):void {
+			
+		}
+		
 		public function onAsynchRecived(msg:String): void
 		{
 			FlexGlobals.topLevelApplication.reportText.text += "\n" + msg;
