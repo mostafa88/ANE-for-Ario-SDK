@@ -28,6 +28,8 @@
 
 static std::string packageName;
 
+// utility functions
+int ConvertLockResult2ArioResult(int lockResult);
 
 //// these functions set in ExtensionInitializer
 void ArioContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctions, const FRENamedFunction** functions);

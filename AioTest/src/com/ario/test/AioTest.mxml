@@ -63,7 +63,8 @@
 	
 	<s:VGroup horizontalAlign = "center" width = "100%" height = "30%"  paddingTop = "10" gap = "10" >
 		<s:Label id = "lblHeader" textAlign="center" fontSize = "20" text="Ario Sample Game To  Test Air SDK :)" width="80%" color = "0x777777"  />
-		<s:TextArea id = "reportText" text = "..." editable = "false" width = "300" height = "200" />
+		<s:TextArea id = "reportText" editable = "false" width = "500" height = "200"  />
+		<s:Button label = "clear text area" id = "btn_text_clear"  click = "arioTest.onClick_btn_clear(event)" />
 		
 		<s:HGroup verticalAlign="middle" width = "100%" height = "30%"  paddingLeft="10" gap = "10">
 			<s:VGroup horizontalAlign = "center" width = "100%" height = "100%"  paddingTop = "10" gap = "10">
@@ -77,7 +78,7 @@
 			<s:VGroup horizontalAlign = "center" width = "100%" height = "100%"  paddingTop = "10" gap = "10">
 				<s:Label id = "lbl_lock" textAlign="center" fontSize = "20" text="Lock Service" width="80%" color = "0x777777"  />
 				<s:Button label = "lock-synch" id = "btn_lock_synch"  click = "arioTest.onClick_btn_lock(event)" />
-				<s:Button label = "lock-asynch" id = "btn_lock_asynch"  click = "arioTest.onClick_btn_user_profile(event)" />
+				<s:Button label = "lock-asynch" id = "btn_lock_asynch"  click = "arioTest.onClick_btn_lock_asynch(event)" />
 			</s:VGroup>
 			<s:VGroup horizontalAlign = "center" width = "100%" height = "100%"  paddingTop = "10" gap = "10">
 				<s:Label id = "lbl_IAB" textAlign="center" fontSize = "20" text="In App Billing Service" width="80%" color = "0x777777"  />

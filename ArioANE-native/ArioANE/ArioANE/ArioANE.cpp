@@ -146,52 +146,125 @@ FREObject CheckPurchase(FREContext ctx, void* functionData, uint32_t argc, FREOb
 	strcpy(cstr, packageName.c_str());
 	
 	char* purchaseToken;
-	int result = ValidatePurchase(cstr, &purchaseToken);
+	int lockResult = ValidatePurchase(cstr, &purchaseToken);
 	delete[] cstr;
 
-	switch (result)
-	{
+	int arioResult = ConvertLockResult2ArioResult(lockResult);
 
-	case STORE_ERROR_CODE_OK:
+	if (arioResult == RESULT_OK)
 	{
 		std::string token = std::string(purchaseToken);
 		return FREString(token);
 	}
-	case STORE_ERROR_KEY_NOT_FOUND:
+	else
 	{
-		MessageBox(NULL, L"STORE_ERROR_KEY_NOT_FOUND", L"caption", 0);
-		return FREString(std::to_string(RESULT_GAME_NOT_OWNED));
-	}
-	case STORE_ERROR_INVALID_PACKAGE_NAME:
-	{
-		MessageBox(NULL, L"STORE_ERROR_INVALID_PACKAGE_NAME", L"caption", 0);
-		return FREString(std::to_string(RESULT_GAME_NOT_RUN_FROM_ARIO));
-	}
-	case STORE_ERROR_INVALID_PARAM:
-	{
-		MessageBox(NULL, L"STORE_ERROR_INVALID_PARAM", L"caption", 0);
-		return FREString(std::to_string(RESULT_GAME_NOT_RUN_FROM_ARIO));
-	}
-	case STORE_ERROR_NOT_RUN_FROM_ARIO:
-	{
-		MessageBox(NULL, L"STORE_ERROR_NOT_RUN_FROM_ARIO", L"caption", 0);
-		return FREString(std::to_string(RESULT_GAME_NOT_RUN_FROM_ARIO));
-	}
-	case STORE_ERROR_UNKNWOWN:
-	{
-		MessageBox(NULL, L"STORE_ERROR_UNKNWOWN", L"caption", 0);
-		return FREString(std::to_string(RESULT_ERROR));
-	}
-
-	default:
-		MessageBox(NULL, L"default error", L"caption", 0);
-		return FREString(std::to_string(RESULT_ERROR));
+		return FREString(std::to_string(arioResult));
 	}
 }
 
 FREObject CheckPurchaseAsynch(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[])
 {
-	return FREObject();
+	// check if developer send the request code!
+	if (argc < 1)
+	{
+		return FREInt(RESULT_DEVELOPER_ERROR);
+	}
+	// get request code 
+	std::string reqCode;
+	bool isOk = FREGetString(argv[0], reqCode);
+	if (!isOk)
+		return FREInt(RESULT_DEVELOPER_ERROR);
+
+	// check package name
+	if (packageName.empty()) // it means developer not invoke init function yet.
+		return FREInt(RESULT_GAME_NOT_RUN_FROM_ARIO);
+
+	// using thread make this code asynchronous
+	std::thread mahta([=](int req_code) {
+
+		// copy packageName to char*
+		char *cstr = new char[packageName.length() + 1];
+		strcpy(cstr, packageName.c_str());
+
+		// calling SDL function
+		int initialLockResult = ValidatePurchaseAsyncStd(cstr, req_code, [](int requestCode, char* pszOrderId, int resultCode) {
+			
+			// this callback return when asynchronous function from SDK returns
+
+			int finalLockResult = ConvertLockResult2ArioResult(resultCode);
+
+			FREResult airResult;
+			char eventCode[32];
+			snprintf(eventCode, sizeof(eventCode), "%d", requestCode);
+			char response[512];
+
+			if (finalLockResult == RESULT_OK)
+				sprintf(response, "{\"result\":%d , \"purchase_token\":\"%s\" }", finalLockResult, pszOrderId);
+			else
+				sprintf(response, "{\"result\":%d , \"purchase_token\":\"%s\" }", finalLockResult, "");
+
+			// dispatch event
+			airResult = FREDispatchStatusEventAsync(AIRContext,
+				(const uint8_t*)eventCode, (const uint8_t*)response);
+
+		});
+
+		int arioResult = ConvertLockResult2ArioResult(initialLockResult);
+		// Checking initial lock result
+		if (arioResult != RESULT_OK)
+		{
+			FREResult airResult;
+			char eventCode[32];
+			snprintf(eventCode, sizeof(eventCode), "%d", req_code);
+			char response[32];
+			sprintf(response, "{\"result\":%d , \"purchase_token\":\"%s\" }", arioResult, "");
+			// dispatch the error response 
+			airResult = FREDispatchStatusEventAsync(AIRContext,
+				(const uint8_t*)eventCode, (const uint8_t*)response);
+		}
+		else // initial call is ok, do nothing. the callback will handle the response.
+		{
+			;
+		}
+	}, std::stoi(reqCode));
+
+	mahta.detach();
+
+	return FREInt(RESULT_OK);
+}
+
+int ConvertLockResult2ArioResult(int lockResult)
+{
+	switch (lockResult)
+	{
+
+	case STORE_ERROR_CODE_OK:
+		return RESULT_OK;
+	case STORE_ERROR_KEY_NOT_FOUND:
+	{
+		return RESULT_GAME_NOT_OWNED;
+		//sprintf(response, "{\"result\":%d , \"purchase_token\":\"%s\" }", RESULT_GAME_NOT_OWNED, "");
+		//break;
+	}
+	case STORE_ERROR_INVALID_PACKAGE_NAME:
+	case STORE_ERROR_INVALID_PARAM:
+	case STORE_ERROR_NOT_RUN_FROM_ARIO:
+	{
+		return RESULT_GAME_NOT_RUN_FROM_ARIO;
+// 		sprintf(response, "{\"result\":%d , \"purchase_token\":\"%s\" }", RESULT_GAME_NOT_RUN_FROM_ARIO, "");
+// 		break;
+	}
+	case STORE_ERROR_UNKNWOWN:
+	{
+		return RESULT_ERROR;
+// 		sprintf(response, "{\"result\":%d , \"purchase_token\":\"%s\" }", RESULT_ERROR, "");
+// 		break;
+	}
+	default:
+		return RESULT_ERROR;
+// 		sprintf(response, "{\"result\":%d , \"purchase_token\":\"%s\" }", RESULT_ERROR, "");
+// 		break;
+	}
 }
 
 // A native context instance is created
@@ -203,7 +276,7 @@ void ArioContextInitializer(void* extData, const uint8_t* ctxType, FREContext ct
 	// 	*numFunctions = sizeof(func) / sizeof(func[0]);
 
 
-	*numFunctions = 7;
+	*numFunctions = 8;
 
 	FRENamedFunction* func = (FRENamedFunction*)malloc(sizeof(FRENamedFunction) * (*numFunctions)); // * * :))))))
 
@@ -235,6 +308,10 @@ void ArioContextInitializer(void* extData, const uint8_t* ctxType, FREContext ct
 	func[6].name = (const uint8_t*)"CheckPurchase";
 	func[6].functionData = NULL;
 	func[6].function = &CheckPurchase;
+
+	func[7].name = (const uint8_t*)"CheckPurchaseAsynch";
+	func[7].functionData = NULL;
+	func[7].function = &CheckPurchaseAsynch;
 
 	*functionsToSet = func;
 	//MessageBox(NULL, L"ContextInitializer", L"caption", 0);

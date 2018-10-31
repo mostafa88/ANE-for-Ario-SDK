@@ -49,7 +49,7 @@ package com.ario.extension
 			// call the function with the request code
 			var result:int = Global.extContext.call("CheckPurchaseAsynch",reqCode) as int;
 			// check the first result of asynch funcion, if result was ok, the final response will be emitted by ArioInterface.onStatus function 
-			if(result!= 0)
+			if(result != ArioResultCode.RESULT_OK)
 			{
 				Utility.HandleAsynchFunctionErrorResult(callback,result,reqCode);
 			}
