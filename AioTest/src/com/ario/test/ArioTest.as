@@ -1,8 +1,10 @@
 package com.ario.test{ 
 	import com.ario.extension.ArioInterface;
 	import com.ario.extension.ArioResultCode;
+	import com.ario.extension.LockResult;
 	
 	import flash.events.MouseEvent;
+	
 	import mx.core.FlexGlobals;
 	
 	
@@ -37,6 +39,16 @@ package com.ario.test{
 		public function onClick_btn_user_level(event:MouseEvent):void {
 			var res:int = ArioInterface.User.GetLevel();
 			FlexGlobals.topLevelApplication.reportText.text = res;
+		}
+		
+		// lock button
+		public function onClick_btn_lock(event:MouseEvent):void {
+			var res:LockResult = ArioInterface.Lock.ValidatePurchase();
+			if(res.result == ArioResultCode.RESULT_OK)
+				FlexGlobals.topLevelApplication.reportText.text = res.purchaseToken;
+			else
+				FlexGlobals.topLevelApplication.reportText.text = res.result;
+			
 		}
 		
 		public function onAsynchRecived(msg:String): void

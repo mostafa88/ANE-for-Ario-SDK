@@ -8,6 +8,7 @@ package com.ario.extension {
 		
 		private static var instance:ArioInterface = null;
 		public static var User:ArioUser = null;
+		public static var Lock:ArioLock = null;
 		
 		public function ArioInterface(target:EventDispatcher=null)
 		{
@@ -27,6 +28,7 @@ package com.ario.extension {
 			Global.extContext.addEventListener(StatusEvent.STATUS, onStatus); 
 			// instanciate Ario services
 			User = new ArioUser();
+			Lock = new ArioLock();
 			instance = this;	
 		}
 		

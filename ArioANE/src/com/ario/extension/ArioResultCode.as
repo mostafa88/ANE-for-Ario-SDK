@@ -1,6 +1,7 @@
 package com.ario.extension {
 	public class ArioResultCode {
 		
+		
 		public static const RESULT_OK:int = 0; // success
 		public static const RESULT_USER_CANCELED:int = 1; // user pressed back or canceled a dialog
 		public static const RESULT_SERVICE_UNAVAILABLE:int = 2; // service unavailable
@@ -26,5 +27,6 @@ package com.ario.extension {
 		public static const RESULT_NO_ACHIEVEMENT:int = 200;
 		public static const RESULT_INACTIVE_ACHIEVEMENT:int = 201;
 		public static const RESULT_ACHIEVEMENT_ALREADY_UNLOCKED:int = 202;
+		
 	}
 }

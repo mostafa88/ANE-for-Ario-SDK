@@ -76,7 +76,7 @@
 			</s:VGroup>
 			<s:VGroup horizontalAlign = "center" width = "100%" height = "100%"  paddingTop = "10" gap = "10">
 				<s:Label id = "lbl_lock" textAlign="center" fontSize = "20" text="Lock Service" width="80%" color = "0x777777"  />
-				<s:Button label = "lock-synch" id = "btn_lock_synch"  click = "arioTest.onClick_btn_user_id(event)" />
+				<s:Button label = "lock-synch" id = "btn_lock_synch"  click = "arioTest.onClick_btn_lock(event)" />
 				<s:Button label = "lock-asynch" id = "btn_lock_asynch"  click = "arioTest.onClick_btn_user_profile(event)" />
 			</s:VGroup>
 			<s:VGroup horizontalAlign = "center" width = "100%" height = "100%"  paddingTop = "10" gap = "10">

@@ -17,8 +17,10 @@
 #define ARIO_SDK
 #ifdef ARIO_SDK
 #include <api.h>
-#include <sdk_result_code.h>
 #include <flat/flat_ario_user.h>
+#include <sdk_result_code.h>
+// Ario Lock headers
+#include <StoreSdkCommon.h>
 #endif // ARIO_SDK
 
 //internal headers
@@ -76,9 +78,9 @@ FREObject Init(FREContext ctx, void* functionData, uint32_t argc, FREObject argv
 	// read arguments
 	std::string tmpPackageName, inAppPurchasePublicKey, leaderboard_publicKey, achivemnet_publicKey;
 	bool isOk = FREGetString(argv[0], tmpPackageName);
-	isOk = isOk | (FREGetString(argv[1], inAppPurchasePublicKey));
-	isOk = isOk | (FREGetString(argv[2], leaderboard_publicKey));
-	isOk = isOk | (FREGetString(argv[3], achivemnet_publicKey));
+	isOk = isOk && (FREGetString(argv[1], inAppPurchasePublicKey));
+	isOk = isOk && (FREGetString(argv[2], leaderboard_publicKey));
+	isOk = isOk && (FREGetString(argv[3], achivemnet_publicKey));
 
 	if(!isOk)
 		return FREInt(RESULT_DEVELOPER_ERROR);
@@ -134,6 +136,64 @@ FREObject GetProfile(FREContext ctx, void* functionData, uint32_t argc, FREObjec
 	return FREInt(RESULT_OK);
 }
 
+FREObject CheckPurchase(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[])
+{
+	if(packageName.empty()) // it means developer not invoke init function yet.
+		return FREString(std::to_string(RESULT_GAME_NOT_RUN_FROM_ARIO));
+	
+	// copy packageName to char*
+	char *cstr = new char[packageName.length() + 1];
+	strcpy(cstr, packageName.c_str());
+	
+	char* purchaseToken;
+	int result = ValidatePurchase(cstr, &purchaseToken);
+	delete[] cstr;
+
+	switch (result)
+	{
+
+	case STORE_ERROR_CODE_OK:
+	{
+		std::string token = std::string(purchaseToken);
+		return FREString(token);
+	}
+	case STORE_ERROR_KEY_NOT_FOUND:
+	{
+		MessageBox(NULL, L"STORE_ERROR_KEY_NOT_FOUND", L"caption", 0);
+		return FREString(std::to_string(RESULT_GAME_NOT_OWNED));
+	}
+	case STORE_ERROR_INVALID_PACKAGE_NAME:
+	{
+		MessageBox(NULL, L"STORE_ERROR_INVALID_PACKAGE_NAME", L"caption", 0);
+		return FREString(std::to_string(RESULT_GAME_NOT_RUN_FROM_ARIO));
+	}
+	case STORE_ERROR_INVALID_PARAM:
+	{
+		MessageBox(NULL, L"STORE_ERROR_INVALID_PARAM", L"caption", 0);
+		return FREString(std::to_string(RESULT_GAME_NOT_RUN_FROM_ARIO));
+	}
+	case STORE_ERROR_NOT_RUN_FROM_ARIO:
+	{
+		MessageBox(NULL, L"STORE_ERROR_NOT_RUN_FROM_ARIO", L"caption", 0);
+		return FREString(std::to_string(RESULT_GAME_NOT_RUN_FROM_ARIO));
+	}
+	case STORE_ERROR_UNKNWOWN:
+	{
+		MessageBox(NULL, L"STORE_ERROR_UNKNWOWN", L"caption", 0);
+		return FREString(std::to_string(RESULT_ERROR));
+	}
+
+	default:
+		MessageBox(NULL, L"default error", L"caption", 0);
+		return FREString(std::to_string(RESULT_ERROR));
+	}
+}
+
+FREObject CheckPurchaseAsynch(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[])
+{
+	return FREObject();
+}
+
 // A native context instance is created
 void ArioContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctions, const FRENamedFunction** functionsToSet)
 {
@@ -143,7 +203,7 @@ void ArioContextInitializer(void* extData, const uint8_t* ctxType, FREContext ct
 	// 	*numFunctions = sizeof(func) / sizeof(func[0]);
 
 
-	*numFunctions = 6;
+	*numFunctions = 7;
 
 	FRENamedFunction* func = (FRENamedFunction*)malloc(sizeof(FRENamedFunction) * (*numFunctions)); // * * :))))))
 
@@ -171,6 +231,10 @@ void ArioContextInitializer(void* extData, const uint8_t* ctxType, FREContext ct
 	func[5].name = (const uint8_t*)"GetProfile";
 	func[5].functionData = NULL;
 	func[5].function = &GetProfile;
+
+	func[6].name = (const uint8_t*)"CheckPurchase";
+	func[6].functionData = NULL;
+	func[6].function = &CheckPurchase;
 
 	*functionsToSet = func;
 	//MessageBox(NULL, L"ContextInitializer", L"caption", 0);
