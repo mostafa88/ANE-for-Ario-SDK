@@ -18,6 +18,7 @@
 #ifdef ARIO_SDK
 #include <api.h>
 #include <flat/flat_ario_user.h>
+#include <flat/flat_ario_iab_helper.h>
 #include <sdk_result_code.h>
 // Ario Lock headers
 #include <StoreSdkCommon.h>
@@ -208,6 +209,7 @@ FREObject CheckPurchaseAsynch(FREContext ctx, void* functionData, uint32_t argc,
 				(const uint8_t*)eventCode, (const uint8_t*)response);
 
 		});
+		delete[] cstr;
 
 		int arioResult = ConvertLockResult2ArioResult(initialLockResult);
 		// Checking initial lock result
@@ -228,6 +230,35 @@ FREObject CheckPurchaseAsynch(FREContext ctx, void* functionData, uint32_t argc,
 		}
 	}, std::stoi(reqCode));
 
+	mahta.detach();
+
+	return FREInt(RESULT_OK);
+}
+
+FREObject GetSkuDetails(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[])
+{
+	if (argc < 2)
+	{
+		return FREInt(RESULT_DEVELOPER_ERROR);
+	}
+
+	std::string reqCode, skuList;
+	bool isOk = FREGetString(argv[0], skuList);
+	isOk = isOk && FREGetString(argv[1], reqCode);
+	
+	if(!isOk)
+		return FREInt(RESULT_DEVELOPER_ERROR);
+
+	std::thread mahta([=](int req_code) {
+
+		// copy skuList to char*
+		char *c_skuList = new char[skuList.length() + 1];
+		strcpy(c_skuList, skuList.c_str());
+
+		ArioIabHelper_GetSkuDetails(c_skuList, req_code, JsonCallback);
+		delete[] c_skuList;
+
+	}, std::stoi(reqCode));
 	mahta.detach();
 
 	return FREInt(RESULT_OK);
@@ -276,7 +307,7 @@ void ArioContextInitializer(void* extData, const uint8_t* ctxType, FREContext ct
 	// 	*numFunctions = sizeof(func) / sizeof(func[0]);
 
 
-	*numFunctions = 8;
+	*numFunctions = 9;
 
 	FRENamedFunction* func = (FRENamedFunction*)malloc(sizeof(FRENamedFunction) * (*numFunctions)); // * * :))))))
 
@@ -312,6 +343,10 @@ void ArioContextInitializer(void* extData, const uint8_t* ctxType, FREContext ct
 	func[7].name = (const uint8_t*)"CheckPurchaseAsynch";
 	func[7].functionData = NULL;
 	func[7].function = &CheckPurchaseAsynch;
+
+	func[8].name = (const uint8_t*)"GetSkuDetails";
+	func[8].functionData = NULL;
+	func[8].function = &GetSkuDetails;
 
 	*functionsToSet = func;
 	//MessageBox(NULL, L"ContextInitializer", L"caption", 0);

@@ -3,6 +3,7 @@
   <includeClasses>
     <classEntry path="com.ario.extension.ArioLock"/>
     <classEntry path="com.ario.extension.LockResult"/>
+    <classEntry path="com.ario.extension.ArioInAppBilling"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

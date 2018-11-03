@@ -46,6 +46,8 @@ FREObject GetProfile(FREContext ctx, void* functionData, uint32_t argc, FREObjec
 // lock function
 FREObject CheckPurchase(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
 FREObject CheckPurchaseAsynch(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
+// In App Billing function
+FREObject GetSkuDetails(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
 
 // these function addressed in ANE "descriptor.xml" file
 extern "C" {
