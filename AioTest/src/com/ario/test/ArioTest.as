@@ -18,11 +18,11 @@ package com.ario.test{
 		private var leaderboardPublicKey:String = ""; // leaderboard public key
 		private var achievementPublickey:String = ""; // achievement public key
 		
-		// clear btn.
+		////////////////////////////// clear btn  ////////////////////////////// 
 		public function onClick_btn_clear(event:MouseEvent):void {
 			FlexGlobals.topLevelApplication.reportText.text = "";
 		}
-		// user buttons
+		////////////////////////////// user buttons /////////////////////////////// 
 		public function onClick_btn_user_id(event:MouseEvent):void {
 			//Alert.show("Hello World!");			
 			var userId:int = ArioInterface.User.GetId();
@@ -45,7 +45,7 @@ package com.ario.test{
 			FlexGlobals.topLevelApplication.reportText.text += res + "\n";
 		}
 		
-		// lock button  
+		////////////////////////////// lock buttons /////////////////////////////// 
 		public function onClick_btn_lock(event:MouseEvent):void {
 			var res:LockResult = ArioInterface.Lock.ValidatePurchase();
 			if(res.result == ArioResultCode.RESULT_OK)
@@ -58,9 +58,11 @@ package com.ario.test{
 			ArioInterface.Lock.ValidatePurchaseAsynch(onAsynchRecived);
 		}
 		
-		// in app billing buttons
+		////////////////////////////// In App Billing buttons /////////////////////////////// 
 		public function onClick_btn_iab_details(event:MouseEvent):void {
-			
+			// sku list is a comma separated list like: FOOT-G1, FOOT-G2
+			var skuList:String = FlexGlobals.topLevelApplication.input_sku_detail.text;
+			ArioInterface.InAppBilling.GetSkuDetails(skuList,onAsynchRecived);
 		}
 		public function onClick_btn_iab_buy(event:MouseEvent):void {
 			
@@ -92,7 +94,7 @@ package com.ario.test{
 			var initResult:int = ArioInterface.Init(packageName,inAppPurchasePublicKey,leaderboardPublicKey,achievementPublickey);
 			if( initResult != ArioResultCode.RESULT_OK)
 			{
-				FlexGlobals.topLevelApplication.reportText.text = "cannot init ario, error:" + initResult;
+				FlexGlobals.topLevelApplication.reportText.text = "cannot init ario, error:" + initResult + "\n";
 				trace(initResult);
 			}
 		}
