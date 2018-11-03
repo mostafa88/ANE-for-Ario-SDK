@@ -379,6 +379,27 @@ FREObject Consume(FREContext ctx, void* functionData, uint32_t argc, FREObject a
 	return FREInt(RESULT_OK);
 }
 
+FREObject GetInventory(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[])
+{
+	if (argc < 1)
+	{
+		return FREInt(RESULT_DEVELOPER_ERROR);
+	}
+
+	std::string reqCode;
+	bool isOk = FREGetString(argv[0], reqCode);
+
+	if (!isOk)
+		return FREInt(RESULT_DEVELOPER_ERROR);
+
+	std::thread mahta([=](int req_code) {
+		ArioIabHelper_GetInventory(SKU_TYPE, req_code, JsonCallback);
+	}, std::stoi(reqCode));
+	mahta.detach();
+
+	return FREInt(RESULT_OK);
+}
+
 int ConvertLockResult2ArioResult(int lockResult)
 {
 	switch (lockResult)
@@ -422,7 +443,7 @@ void ArioContextInitializer(void* extData, const uint8_t* ctxType, FREContext ct
 	// 	*numFunctions = sizeof(func) / sizeof(func[0]);
 
 
-	*numFunctions = 11;
+	*numFunctions = 12;
 
 	FRENamedFunction* func = (FRENamedFunction*)malloc(sizeof(FRENamedFunction) * (*numFunctions)); // * * :))))))
 
@@ -470,6 +491,10 @@ void ArioContextInitializer(void* extData, const uint8_t* ctxType, FREContext ct
 	func[10].name = (const uint8_t*)"Consume";
 	func[10].functionData = NULL;
 	func[10].function = &Consume;
+
+	func[11].name = (const uint8_t*)"GetInventory";
+	func[11].functionData = NULL;
+	func[11].function = &GetInventory;
 
 	*functionsToSet = func;
 	//MessageBox(NULL, L"ContextInitializer", L"caption", 0);

@@ -50,6 +50,7 @@ FREObject CheckPurchaseAsynch(FREContext ctx, void* functionData, uint32_t argc,
 FREObject GetSkuDetails(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
 FREObject Buy(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
 FREObject Consume(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
+FREObject GetInventory(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
 
 
 // these function addressed in ANE "descriptor.xml" file

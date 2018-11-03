@@ -1,4 +1,5 @@
 package com.ario.test{ 
+	import com.ario.extension.ArioInAppBilling;
 	import com.ario.extension.ArioInterface;
 	import com.ario.extension.ArioResultCode;
 	import com.ario.extension.LockResult;
@@ -81,7 +82,7 @@ package com.ario.test{
 				FlexGlobals.topLevelApplication.reportText.text +=  "Noting to cunsume!! Please buy an item first..." + "\n";
 		}
 		public function onClick_btn_iab_inventory(event:MouseEvent):void {
-			
+			ArioInterface.InAppBilling.GetInventory(onAsynchRecived);
 		}
 		
 		public function onAsynchRecived(msg:String): void
