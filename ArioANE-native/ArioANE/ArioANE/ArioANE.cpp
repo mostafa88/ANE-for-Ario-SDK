@@ -17,8 +17,10 @@
 #define ARIO_SDK
 #ifdef ARIO_SDK
 #include <api.h>
-#include <flat/flat_ario_user.h>
 #include <flat/flat_ario_iab_helper.h>
+#include <flat/flat_ario_leaderboard.h>
+#include <flat/flat_ario_achievement.h>
+#include <flat/flat_ario_user.h>
 #include <sdk_result_code.h>
 // Ario Lock headers
 #include <StoreSdkCommon.h>
@@ -26,6 +28,10 @@
 
 //internal headers
 #include "FREConverters.h"
+
+// In app billing const definitions
+char* SKU_TYPE = "inapp"; // current version only support inapp, so for now we hardcode this sku_type
+
 
 #ifdef ARIO_SDK
 using namespace Ario;
@@ -90,10 +96,56 @@ FREObject Init(FREContext ctx, void* functionData, uint32_t argc, FREObject argv
 	strcpy(cstr, tmpPackageName.c_str());
 	int initResult = Api_Init(cstr);
 	delete[] cstr;
-	if (initResult == RESULT_OK) // save packageName
+	if (initResult == RESULT_OK) 
+	{
+		// save packageName
 		packageName = tmpPackageName;
 
+		// init iabHelper
+		if (!inAppPurchasePublicKey.empty())
+		{
+			char *c_iabPublickKey = new char[inAppPurchasePublicKey.length() + 1];
+			strcpy(c_iabPublickKey, inAppPurchasePublicKey.c_str());
+
+			initResult = ArioIabHelper_StartSetup(c_iabPublickKey);
+			delete[] c_iabPublickKey;
+
+			if (initResult != RESULT_OK)
+			{
+				return FREInt(initResult);
+			}
+		}
+		// init leaderboard
+		if (!leaderboard_publicKey.empty())
+		{
+			char *c_leaderboardKey = new char[leaderboard_publicKey.length() + 1];
+			strcpy(c_leaderboardKey, leaderboard_publicKey.c_str());
+
+			initResult = ArioLeaderboard_StartSetup(c_leaderboardKey);
+			delete[] c_leaderboardKey;
+
+			if (initResult != RESULT_OK)
+			{
+				return FREInt(initResult);
+			}
+		}
+		// init achievement
+		if (!achivemnet_publicKey.empty())
+		{
+			char* c_achievementKey = new char[achivemnet_publicKey.length() + 1];
+			strcpy(c_achievementKey, achivemnet_publicKey.c_str());
+
+			initResult = ArioAchievement_StartSetup(c_achievementKey);
+			delete[] c_achievementKey;
+
+			if (initResult != RESULT_OK)
+			{
+				return FREInt(initResult);
+			}
+		}
+	}
 	return FREInt(initResult);
+
 }
 
 FREObject IsLogin(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[])
@@ -264,6 +316,69 @@ FREObject GetSkuDetails(FREContext ctx, void* functionData, uint32_t argc, FREOb
 	return FREInt(RESULT_OK);
 }
 
+FREObject Buy(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[])
+{
+	if (argc < 3)
+	{
+		return FREInt(RESULT_DEVELOPER_ERROR);
+	}
+
+	std::string sku, developerPayload, reqCode;
+	bool isOk = FREGetString(argv[0], sku);
+	isOk = isOk && FREGetString(argv[1], developerPayload);
+	isOk = isOk && FREGetString(argv[2], reqCode);
+
+	if (!isOk)
+		return FREInt(RESULT_DEVELOPER_ERROR);
+
+	std::thread mahta([=](int req_code) {
+
+		// copy sku and developerPayload to char*
+		char *c_sku = new char[sku.length() + 1];
+		strcpy(c_sku, sku.c_str());
+
+		char *c_payload = new char[developerPayload.length() + 1];
+		strcpy(c_payload, developerPayload.c_str());
+
+		ArioIabHelper_LaunchPurchaseFlow(c_sku, SKU_TYPE, c_payload, req_code, JsonCallback);
+		delete[] c_sku;
+		delete[] c_payload;
+
+	}, std::stoi(reqCode));
+	mahta.detach();
+
+	return FREInt(RESULT_OK);
+}
+
+FREObject Consume(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[])
+{
+	if (argc < 2)
+	{
+		return FREInt(RESULT_DEVELOPER_ERROR);
+	}
+
+	std::string purchaseToken, reqCode;
+	bool isOk = FREGetString(argv[0], purchaseToken);
+	isOk = isOk && FREGetString(argv[1], reqCode);
+
+	if (!isOk)
+		return FREInt(RESULT_DEVELOPER_ERROR);
+
+	std::thread mahta([=](int req_code) {
+
+		// copy purchaseToken to char*
+		char *c_purchaseToken = new char[purchaseToken.length() + 1];
+		strcpy(c_purchaseToken, purchaseToken.c_str());
+
+		ArioIabHelper_Cunsume(c_purchaseToken, req_code, JsonCallback);
+		delete[] c_purchaseToken;
+
+	}, std::stoi(reqCode));
+	mahta.detach();
+
+	return FREInt(RESULT_OK);
+}
+
 int ConvertLockResult2ArioResult(int lockResult)
 {
 	switch (lockResult)
@@ -307,7 +422,7 @@ void ArioContextInitializer(void* extData, const uint8_t* ctxType, FREContext ct
 	// 	*numFunctions = sizeof(func) / sizeof(func[0]);
 
 
-	*numFunctions = 9;
+	*numFunctions = 11;
 
 	FRENamedFunction* func = (FRENamedFunction*)malloc(sizeof(FRENamedFunction) * (*numFunctions)); // * * :))))))
 
@@ -347,6 +462,14 @@ void ArioContextInitializer(void* extData, const uint8_t* ctxType, FREContext ct
 	func[8].name = (const uint8_t*)"GetSkuDetails";
 	func[8].functionData = NULL;
 	func[8].function = &GetSkuDetails;
+
+	func[9].name = (const uint8_t*)"Buy";
+	func[9].functionData = NULL;
+	func[9].function = &Buy;
+
+	func[10].name = (const uint8_t*)"Consume";
+	func[10].functionData = NULL;
+	func[10].function = &Consume;
 
 	*functionsToSet = func;
 	//MessageBox(NULL, L"ContextInitializer", L"caption", 0);

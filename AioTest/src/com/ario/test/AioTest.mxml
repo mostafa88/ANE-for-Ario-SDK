@@ -4,7 +4,8 @@
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
 					   title="Ario Test SDK"
 					   width="1000"
-					   height="600"
+					   minHeight="550"
+					   minWidth="800"
 					   initialize = "reportEvent(event)"
 					   preinitialize = "reportEvent(event)"
 					   creationComplete = "reportEvent(event)"
@@ -63,7 +64,7 @@
 	
 	<s:VGroup horizontalAlign = "center" width = "100%" height = "30%"  paddingTop = "10" gap = "10" >
 		<s:Label id = "lblHeader" textAlign="center" fontSize = "20" text="Ario Sample Game To  Test Air SDK :)" width="80%" color = "#ffffff"  />
-		<s:TextArea id = "reportText" editable = "false" width = "600" height = "200"  />
+		<s:TextArea id = "reportText" editable = "false" width = "60%" height = "200"  />
 		<s:Button label = "clear text area" id = "btn_text_clear"  click = "arioTest.onClick_btn_clear(event)" />
 		
 		<s:HGroup verticalAlign="middle" width = "100%" height = "30%"  paddingLeft="10" gap = "10" paddingRight="10">
@@ -84,15 +85,20 @@
 				<s:Label id = "lbl_IAB" textAlign="center" fontSize = "20" text="In App Billing Service" width="80%" color = "#ffffff"  />
 				<s:HGroup>
 					<s:Button label = "get sku details" id = "btn_iab_get_sdkuDetails"  click = "arioTest.onClick_btn_iab_details(event)" />
-					<s:Label id = "detail_sku_lable" textAlign="center" fontSize = "18" text="sku list(comma separated):" width="80%" color = "#5b9100" />
-					<s:TextInput id="input_sku_detail" />
+					<s:Label id = "detail_sku_lable" textAlign="center" fontSize = "15" text="sku list(comma separated):" width="80%" color = "#5b9100" />
+					<s:TextInput id="input_sku_detail" text="FOOT-G1, FOOT-G2" />
 				</s:HGroup>
 				<s:HGroup>
 					<s:Button label = "buy inapp item" id = "btn_iab_lanch_purchase"  click = "arioTest.onClick_btn_iab_buy(event)" />
-					<s:Label id = "buy_sku_lable" textAlign="center" fontSize = "18" text="sku:" width="80%" color = "#5b9100"/>
-					<s:TextInput id="input_sku"/>
+					<s:Label id = "buy_sku_lable" textAlign="center" fontSize = "15" text="sku:" width="80%" color = "#5b9100"/>
+					<s:TextInput id="input_sku" text="FOOT-G1" />
 				</s:HGroup>
-				<s:Button label = "consume item" id = "btn_iab_consume"  click = "arioTest.onClick_btn_iab_consume(event)" />
+				<s:HGroup>
+					<s:Button label = "consume token" id = "btn_iab_consume"  click = "arioTest.onClick_btn_iab_consume(event)"  width="23%" />
+					<s:Label id = "consume_token_label" textAlign="center" fontSize = "15" text="purchaseToken:" width="25%" color = "#5b9100"/>
+					<s:TextInput id="input_token" text="" width="52%" />
+				</s:HGroup>
+				
 				<s:Button label = "get inventory" id = "btn_iab_get_inventory"  click = "arioTest.onClick_btn_iab_inventory(event)" />
 				
 			</s:VGroup>

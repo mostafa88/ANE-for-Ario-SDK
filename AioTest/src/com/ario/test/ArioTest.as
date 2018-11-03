@@ -66,9 +66,19 @@ package com.ario.test{
 		}
 		public function onClick_btn_iab_buy(event:MouseEvent):void {
 			
+			var sku:String = FlexGlobals.topLevelApplication.input_sku.text;
+			var developerPayload:String = "A SIMPLE DEVELOPER PAYLOAD";
+			ArioInterface.InAppBilling.Buy(sku,developerPayload,onPurchaseFinished);
 		}
 		public function onClick_btn_iab_consume(event:MouseEvent):void {
+			var purchaseToken:String = FlexGlobals.topLevelApplication.input_token.text;
+			if( purchaseToken.length > 0)
+			{
+				ArioInterface.InAppBilling.Consume(purchaseToken,onConsumeFinish);
+			}
 			
+			else
+				FlexGlobals.topLevelApplication.reportText.text +=  "Noting to cunsume!! Please buy an item first..." + "\n";
 		}
 		public function onClick_btn_iab_inventory(event:MouseEvent):void {
 			
@@ -77,6 +87,28 @@ package com.ario.test{
 		public function onAsynchRecived(msg:String): void
 		{
 			FlexGlobals.topLevelApplication.reportText.text +=  msg + "\n";
+		}
+		public function onPurchaseFinished(msg:String): void
+		{
+			var data:Object = JSON.parse(msg);
+			if(data.hasOwnProperty("purchaseToken"))
+			{
+				FlexGlobals.topLevelApplication.input_token.text = data["purchaseToken"];
+			}
+			onAsynchRecived(msg);
+		}
+		public function onConsumeFinish(msg:String):void
+		{
+			var data:Object = JSON.parse(msg);
+			if(data.hasOwnProperty("result"))
+			{
+				var result:int = data["result"];
+				if(result == ArioResultCode.RESULT_OK)
+				{
+					FlexGlobals.topLevelApplication.input_token.text = "";
+				}	
+			}
+			onAsynchRecived(msg);
 		}
 		
 		public function onInitialize():void 
