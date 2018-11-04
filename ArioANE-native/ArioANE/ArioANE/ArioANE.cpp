@@ -400,6 +400,55 @@ FREObject GetInventory(FREContext ctx, void* functionData, uint32_t argc, FREObj
 	return FREInt(RESULT_OK);
 }
 
+FREObject GetLeaderboards(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[])
+{
+	if (argc < 1)
+	{
+		return FREInt(RESULT_DEVELOPER_ERROR);
+	}
+
+	std::string reqCode;
+	bool isOk = FREGetString(argv[0], reqCode);
+
+	if (!isOk)
+		return FREInt(RESULT_DEVELOPER_ERROR);
+
+	std::thread mahta([=](int req_code) {
+		ArioLeaderboard_GetLeaderboards(req_code, JsonCallback);
+	}, std::stoi(reqCode));
+	mahta.detach();
+
+	return FREInt(RESULT_OK);
+}
+
+FREObject GetScores(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[])
+{
+	if (argc < 6)
+	{
+		return FREInt(RESULT_DEVELOPER_ERROR);
+	}
+
+	int leaderboardId, collectionType, timeFrame, offse, limit;
+	std::string  reqCode;
+	bool isOk = FREGetInt32(argv[0], &leaderboardId);
+	isOk = isOk && FREGetInt32(argv[1], &collectionType);
+	isOk = isOk && FREGetInt32(argv[2], &timeFrame);
+	isOk = isOk && FREGetInt32(argv[3], &offse);
+	isOk = isOk && FREGetInt32(argv[4], &limit);
+	isOk = isOk && FREGetString(argv[5], reqCode);
+
+	if (!isOk)
+		return FREInt(RESULT_DEVELOPER_ERROR);
+
+	std::thread mahta([=](int req_code) {
+		ArioLeaderboard_GetScores(leaderboardId, collectionType, timeFrame, offse, limit, req_code, JsonCallback);
+
+	}, std::stoi(reqCode));
+	mahta.detach();
+
+	return FREInt(RESULT_OK);
+}
+
 int ConvertLockResult2ArioResult(int lockResult)
 {
 	switch (lockResult)
@@ -443,7 +492,7 @@ void ArioContextInitializer(void* extData, const uint8_t* ctxType, FREContext ct
 	// 	*numFunctions = sizeof(func) / sizeof(func[0]);
 
 
-	*numFunctions = 12;
+	*numFunctions = 14;
 
 	FRENamedFunction* func = (FRENamedFunction*)malloc(sizeof(FRENamedFunction) * (*numFunctions)); // * * :))))))
 
@@ -495,6 +544,14 @@ void ArioContextInitializer(void* extData, const uint8_t* ctxType, FREContext ct
 	func[11].name = (const uint8_t*)"GetInventory";
 	func[11].functionData = NULL;
 	func[11].function = &GetInventory;
+
+	func[12].name = (const uint8_t*)"GetLeaderboards";
+	func[12].functionData = NULL;
+	func[12].function = &GetLeaderboards;
+
+	func[13].name = (const uint8_t*)"GetScores";
+	func[13].functionData = NULL;
+	func[13].function = &GetScores;
 
 	*functionsToSet = func;
 	//MessageBox(NULL, L"ContextInitializer", L"caption", 0);

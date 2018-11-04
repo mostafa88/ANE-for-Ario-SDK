@@ -10,6 +10,7 @@ package com.ario.extension {
 		public static var User:ArioUser = null;
 		public static var Lock:ArioLock = null;
 		public static var InAppBilling:ArioInAppBilling = null;
+		public static var Leaderboard:ArioLeaderboard = null;
 		
 		public function ArioInterface(target:EventDispatcher=null)
 		{
@@ -31,6 +32,7 @@ package com.ario.extension {
 			User = new ArioUser();
 			Lock = new ArioLock();
 			InAppBilling = new ArioInAppBilling();
+			Leaderboard = new ArioLeaderboard();
 			
 			instance = this;	
 		}

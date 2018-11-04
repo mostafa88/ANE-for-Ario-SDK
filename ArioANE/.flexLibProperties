@@ -4,6 +4,7 @@
     <classEntry path="com.ario.extension.ArioLock"/>
     <classEntry path="com.ario.extension.LockResult"/>
     <classEntry path="com.ario.extension.ArioInAppBilling"/>
+    <classEntry path="com.ario.extension.ArioLeaderboard"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

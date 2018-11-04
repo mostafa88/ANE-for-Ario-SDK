@@ -51,6 +51,9 @@ FREObject GetSkuDetails(FREContext ctx, void* functionData, uint32_t argc, FREOb
 FREObject Buy(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
 FREObject Consume(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
 FREObject GetInventory(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
+// leaderboard functions
+FREObject GetLeaderboards(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
+FREObject GetScores(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
 
 
 // these function addressed in ANE "descriptor.xml" file
