@@ -3,9 +3,10 @@
 An AIR Native Extension for Ario SDK that used by Adobe Air developers.
 
 # Project Structore
-\AioTest
-\ArioANE
-\ArioANE-native
+-
+ --AioTest
+ --ArioANE
+ --ArioANE-native
 
 
 # Building 
