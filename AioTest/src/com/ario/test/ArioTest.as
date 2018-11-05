@@ -153,13 +153,48 @@ package com.ario.test{
 		}
 		public function onClick_btn_leaderboard_get_my_rank(event:MouseEvent):void
 		{
+			// finding leaderboard Id
+			var leaderboardIndex:int = FlexGlobals.topLevelApplication.comboBox_leaderboards2.selectedIndex;
+			if(leaderboardIndex < 0) // there is no leaderboard
+			{
+				ShowText("No leaderboard selected! Please call Get leaderboards first and select a leaderboard ID");
+			}
+			else
+			{
+				var leaderboardId:int = array_leaderboards_Obj[leaderboardIndex]["id"];
+				// finding collection type
+				var collectionType:int = FlexGlobals.topLevelApplication.comboBox_collectionType2.selectedIndex;
+				// finding time frame
+				var timeFrame:int = FlexGlobals.topLevelApplication.comboBox_timeFrame2.selectedIndex;
+				// finding up and down limit
+				var upLimit:int = parseInt(FlexGlobals.topLevelApplication.input_leaderboard_up_limit.text,10);
+				var downLimit:int = parseInt(FlexGlobals.topLevelApplication.input_leaderboard_down_limit.text,10);
+				
+				ArioInterface.Leaderboard.GetMyRank(leaderboardId,collectionType,timeFrame,upLimit,downLimit,onAsynchRecived);
+			}
 			
 		}
 		public function onClick_btn_leaderboard_submit_score(event:MouseEvent):void{
 			
+			// finding leaderboard Id
+			var leaderboardIndex:int = FlexGlobals.topLevelApplication.comboBox_leaderboards3.selectedIndex;
+			if(leaderboardIndex < 0) // there is no leaderboard
+			{
+				ShowText("No leaderboard selected! Please call Get leaderboards first and select a leaderboard ID");
+			}
+			else
+			{
+				var leaderboardId:int = array_leaderboards_Obj[leaderboardIndex]["id"];
+				// finding value
+				var value:Number = parseInt(FlexGlobals.topLevelApplication.input_leaderboard_submit_value.text,10);
+				// finding metadata
+				var metadata:String = FlexGlobals.topLevelApplication.input_leaderboard_submit_metadata.text;
+				
+				ArioInterface.Leaderboard.SubmitScore(value,leaderboardId,metadata,onAsynchRecived);
+			}
 		}
 		public function onClick_btn_leaderboard_show_leaderboard(event:MouseEvent):void{
-			
+			ArioInterface.Leaderboard.ShowLeaderboard();
 		}
 		
 		private function onLeaderboardFinish(msg:String):void

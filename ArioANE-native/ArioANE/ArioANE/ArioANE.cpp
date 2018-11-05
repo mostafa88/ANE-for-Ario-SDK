@@ -449,6 +449,71 @@ FREObject GetScores(FREContext ctx, void* functionData, uint32_t argc, FREObject
 	return FREInt(RESULT_OK);
 }
 
+FREObject GetMyRank(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[])
+{
+	if (argc < 6)
+	{
+		return FREInt(RESULT_DEVELOPER_ERROR);
+	}
+
+	int leaderboardId, collectionType, timeFrame, upLimit, downLimit;
+	std::string  reqCode;
+	bool isOk = FREGetInt32(argv[0], &leaderboardId);
+	isOk = isOk && FREGetInt32(argv[1], &collectionType);
+	isOk = isOk && FREGetInt32(argv[2], &timeFrame);
+	isOk = isOk && FREGetInt32(argv[3], &upLimit);
+	isOk = isOk && FREGetInt32(argv[4], &downLimit);
+	isOk = isOk && FREGetString(argv[5], reqCode);
+
+	if (!isOk)
+		return FREInt(RESULT_DEVELOPER_ERROR);
+
+	std::thread mahta([=](int req_code) {
+		ArioLeaderboard_GetMyRank(leaderboardId, collectionType, timeFrame, upLimit, downLimit, req_code, JsonCallback);
+
+	}, std::stoi(reqCode));
+	mahta.detach();
+
+	return FREInt(RESULT_OK);
+}
+
+FREObject SubmitScore(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[])
+{
+	if (argc < 4)
+	{
+		return FREInt(RESULT_DEVELOPER_ERROR);
+	}
+
+	int leaderboardId, value;
+	std::string  metadata, reqCode;
+	bool isOk = FREGetInt32(argv[0], &value);
+	isOk = isOk && FREGetInt32(argv[1], &leaderboardId);
+	isOk = isOk && FREGetString(argv[2], metadata);
+	isOk = isOk && FREGetString(argv[3], reqCode);
+
+	if (!isOk)
+		return FREInt(RESULT_DEVELOPER_ERROR);
+
+	std::thread mahta([=](int req_code) {
+
+		// copy metadata to char*
+		char *c_metadata = new char[metadata.length() + 1];
+		strcpy(c_metadata, metadata.c_str());
+		ArioLeaderboard_SubmitScore(value, leaderboardId, c_metadata, req_code, JsonCallback);
+
+	}, std::stoi(reqCode));
+	mahta.detach();
+
+	return FREInt(RESULT_OK);
+}
+
+FREObject ShowLeaderboard(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[])
+{
+	ArioLeaderboard_ShowLeaderboards();
+	// dummy return value
+	return FREObject();
+}
+
 int ConvertLockResult2ArioResult(int lockResult)
 {
 	switch (lockResult)
@@ -492,7 +557,7 @@ void ArioContextInitializer(void* extData, const uint8_t* ctxType, FREContext ct
 	// 	*numFunctions = sizeof(func) / sizeof(func[0]);
 
 
-	*numFunctions = 14;
+	*numFunctions = 17;
 
 	FRENamedFunction* func = (FRENamedFunction*)malloc(sizeof(FRENamedFunction) * (*numFunctions)); // * * :))))))
 
@@ -552,6 +617,18 @@ void ArioContextInitializer(void* extData, const uint8_t* ctxType, FREContext ct
 	func[13].name = (const uint8_t*)"GetScores";
 	func[13].functionData = NULL;
 	func[13].function = &GetScores;
+
+	func[14].name = (const uint8_t*)"GetMyRank";
+	func[14].functionData = NULL;
+	func[14].function = &GetMyRank;
+
+	func[15].name = (const uint8_t*)"SubmitScore";
+	func[15].functionData = NULL;
+	func[15].function = &SubmitScore;
+
+	func[16].name = (const uint8_t*)"ShowLeaderboard";
+	func[16].functionData = NULL;
+	func[16].function = &ShowLeaderboard;
 
 	*functionsToSet = func;
 	//MessageBox(NULL, L"ContextInitializer", L"caption", 0);

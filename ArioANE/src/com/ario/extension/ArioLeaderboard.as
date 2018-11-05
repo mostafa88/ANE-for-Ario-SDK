@@ -43,6 +43,40 @@ package com.ario.extension
 			{
 				Utility.HandleAsynchFunctionErrorResult(callback,result,reqCode);
 			}
-		}	
+		}
+		public function GetMyRank(leaderboardId:int, collectionType:int, timeFram:int, upLimit:int, downLimit:int, callback:Function) : void 
+		{
+			// generating a random request code
+			var reqCode:String = Math.ceil(Math.random()*int.MAX_VALUE).toString();
+			trace(reqCode);
+			// save callback function.
+			Global.callbackMap[reqCode] = callback;
+			// call the function with the request code
+			var result:int = Global.extContext.call("GetMyRank",leaderboardId, collectionType, timeFram, upLimit, downLimit, reqCode) as int;
+			// check the first result of asynch funcion, if result was ok, the final response will be emitted by ArioInterface.onStatus function 
+			if(result!= ArioResultCode.RESULT_OK)
+			{
+				Utility.HandleAsynchFunctionErrorResult(callback,result,reqCode);
+			}
+		}
+		public function SubmitScore(value:Number, leaderboardId:int, metadata:String, callback:Function):void
+		{
+			// generating a random request code
+			var reqCode:String = Math.ceil(Math.random()*int.MAX_VALUE).toString();
+			trace(reqCode);
+			// save callback function.
+			Global.callbackMap[reqCode] = callback;
+			// call the function with the request code
+			var result:int = Global.extContext.call("SubmitScore",value, leaderboardId, metadata, reqCode) as int;
+			// check the first result of asynch funcion, if result was ok, the final response will be emitted by ArioInterface.onStatus function 
+			if(result!= ArioResultCode.RESULT_OK)
+			{
+				Utility.HandleAsynchFunctionErrorResult(callback,result,reqCode);
+			}
+		}
+		public function  ShowLeaderboard():void
+		{
+			Global.extContext.call("ShowLeaderboard");
+		}
 	}
 }

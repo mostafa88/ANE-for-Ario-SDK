@@ -4,7 +4,7 @@
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
 					   title="Ario Test SDK"
 					   width="1000"
-					   minHeight="720"
+					   minHeight="840"
 					   minWidth="800"
 					   initialize = "reportEvent(event)"
 					   preinitialize = "reportEvent(event)"
@@ -114,7 +114,7 @@
 						</s:stroke>  
 					</s:Rect>  
 					<s:HGroup paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5">
-						<s:Button label = "Get scores" id = "btn_leaderboard_get_scores"  click = "arioTest.onClick_btn_leaderboard_get_scores(event)" height="100%" />
+						<s:Button label = "Get scores" id = "btn_leaderboard_get_scores"  click = "arioTest.onClick_btn_leaderboard_get_scores(event)" height="75%" />
 						<s:VGroup>
 							<s:HGroup>
 								<s:Label id = "lbl_leaderboards" textAlign="center" fontSize = "15" text="leaderboards:" width="90" color = "#5b9100"/>
@@ -131,8 +131,52 @@
 						</s:VGroup>
 					</s:HGroup>
 				</s:Group>  
-				<s:Button label = "Get my rank" id = "btn_leaderboard_get_my_rank"  click = "arioTest.onClick_btn_leaderboard_get_my_rank(event)" />
-				<s:Button label = "Sumbit score" id = "btn_leaderboard_sumbit_score"  click = "arioTest.onClick_btn_leaderboard_submit_score(event)" />
+				<s:Group>  
+					<s:Rect width="100%" height="100%">  
+						<s:stroke>  
+							<s:SolidColorStroke color="#86a0a0" weight="2" />  
+						</s:stroke>  
+					</s:Rect>  
+					<s:HGroup paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5">
+						<s:Button label = "Get my rank" id = "btn_leaderboard_get_my_rank"  click = "arioTest.onClick_btn_leaderboard_get_my_rank(event)" height="75%" />
+						<s:VGroup>
+							<s:HGroup>
+								<s:Label id = "lbl_leaderboards2" textAlign="center" fontSize = "15" text="leaderboards:" width="90" color = "#5b9100"/>
+								<s:ComboBox  id = "comboBox_leaderboards2"  dataProvider = "{arioTest.array_leaderboards_name}"  width = "100" selectedIndex = "1"  labelField = "value" />
+								<s:ComboBox  id = "comboBox_collectionType2"  dataProvider = "{arioTest.array_collectionType}"  width = "79" selectedIndex = "0"  labelField = "value" />
+								<s:ComboBox  id = "comboBox_timeFrame2"  dataProvider = "{arioTest.array_timeFrame}"  width = "79" selectedIndex = "0"  labelField = "value" />
+							</s:HGroup>
+							<s:HGroup>
+								<s:Label id = "lbl_leaderboard_up_limit" textAlign="center" fontSize = "15" text="up limit:" width="79" color = "#5b9100"/>
+								<s:TextInput id="input_leaderboard_up_limit" text="0" width="79" restrict="0-9" />
+								<s:Label id = "lbl_leaderboard__down_limit" textAlign="center" fontSize = "15" text="down limit:" width="90" color = "#5b9100"/>
+								<s:TextInput id="input_leaderboard_down_limit" text="0" width="100" restrict="0-9" />
+							</s:HGroup>
+						</s:VGroup>
+					</s:HGroup>
+				</s:Group>  
+				<s:Group>  
+					<s:Rect width="100%" height="100%">  
+						<s:stroke>  
+							<s:SolidColorStroke color="#86a0a0" weight="2" />  
+						</s:stroke>  
+					</s:Rect>  
+					<s:HGroup paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5">
+						<s:Button label = "Sumbit score" id = "btn_leaderboard_sumbit_score"  click = "arioTest.onClick_btn_leaderboard_submit_score(event)"  height="75%" />
+						<s:VGroup>
+							<s:HGroup>
+								<s:Label id = "lbl_leaderboards3" textAlign="center" fontSize = "15" text="leaderboards:" width="90" color = "#5b9100"/>
+								<s:ComboBox  id = "comboBox_leaderboards3"  dataProvider = "{arioTest.array_leaderboards_name}"  width = "100" selectedIndex = "1"  labelField = "value" />
+								<s:Label id = "lbl_leaderboard_submit_value" textAlign="center" fontSize = "15" text="value:" width="79" color = "#5b9100"/>
+								<s:TextInput id="input_leaderboard_submit_value" text="1" width="79" restrict="0-9" />
+							</s:HGroup>
+							<s:HGroup>
+								<s:Label id = "lbl_leaderboard_submit_metadata" textAlign="center" fontSize = "15" text="meta data:" width="90" color = "#5b9100"/>
+								<s:TextInput id="input_leaderboard_submit_metadata" text="sample meta data string" width="270" />
+							</s:HGroup>
+						</s:VGroup>
+					</s:HGroup>
+				</s:Group>
 				<s:Button label = "Show leaderboard" id = "btn_leaderboard_show"  click = "arioTest.onClick_btn_leaderboard_show_leaderboard(event)" />
 			</s:VGroup>
 		</s:HGroup>

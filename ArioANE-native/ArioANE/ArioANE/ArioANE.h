@@ -54,7 +54,9 @@ FREObject GetInventory(FREContext ctx, void* functionData, uint32_t argc, FREObj
 // leaderboard functions
 FREObject GetLeaderboards(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
 FREObject GetScores(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
-
+FREObject GetMyRank(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
+FREObject SubmitScore(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
+FREObject ShowLeaderboard(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
 
 // these function addressed in ANE "descriptor.xml" file
 extern "C" {
