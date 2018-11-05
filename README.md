@@ -1,11 +1,23 @@
-# ANE-for-Ario-SDK
-A AIR Native Extension for Ario SDK that used by Adobe Air developers.
+# Ait Native Extension(ANE) library for Ario SDK
 
-Note: In project propertice >> actionScript LIbrary Compiler >>  Additional compiler arguments:
+An AIR Native Extension for Ario SDK that used by Adobe Air developers.
+
+# Project Structore
+\AioTest
+\ArioANE
+\ArioANE-native
+
+
+# Building 
+In project propertice >> actionScript LIbrary Compiler >>  Additional compiler arguments:
 add the following flag "-swf-version 13".
 
-References:
-Building ADOBE® AIR® Applications: It is a complte refrence to start understanding adobe Air and build first adobe air project
+1- first build `ArioANE-native` project in visual studio 2015 in release mode.
+2- run `\ArioANE\build-ane-libarary.bat` 
+3- start coding in `AioTest\` project
+
+# References
+It is a complte refrence to start understanding adobe Air and build first adobe air project
 1-https://help.adobe.com/en_US/air/build/air_buildingapps.pdf
 
 A good tutorial by example that show you how to work with a adobe air project and code action script
