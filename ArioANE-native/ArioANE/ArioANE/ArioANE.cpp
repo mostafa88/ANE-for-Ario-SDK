@@ -536,6 +536,78 @@ FREObject GetGameAchievements(FREContext ctx, void* functionData, uint32_t argc,
 	return FREInt(RESULT_OK);
 }
 
+FREObject GetStatus(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[])
+{
+	if (argc < 2)
+	{
+		return FREInt(RESULT_DEVELOPER_ERROR);
+	}
+
+	int achievementId;
+	std::string reqCode;
+
+	bool isOk = FREGetInt32(argv[0], &achievementId);
+	isOk = isOk && FREGetString(argv[1], reqCode);
+
+	if (!isOk)
+		return FREInt(RESULT_DEVELOPER_ERROR);
+
+	std::thread mahta([=](int req_code) {
+		ArioAchievement_GetStatus(achievementId, req_code, JsonCallback);
+	}, std::stoi(reqCode));
+	mahta.detach();
+
+	return FREInt(RESULT_OK);
+}
+
+FREObject Unlock(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[])
+{
+	if (argc < 2)
+	{
+		return FREInt(RESULT_DEVELOPER_ERROR);
+	}
+
+	int achievementId;
+	std::string reqCode;
+
+	bool isOk = FREGetInt32(argv[0], &achievementId);
+	isOk = isOk && FREGetString(argv[1], reqCode);
+
+	if (!isOk)
+		return FREInt(RESULT_DEVELOPER_ERROR);
+
+	std::thread mahta([=](int req_code) {
+		ArioAchievement_Unlock(achievementId, req_code, JsonCallback);
+	}, std::stoi(reqCode));
+	mahta.detach();
+
+	return FREInt(RESULT_OK);
+}
+
+FREObject ResetStatus(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[])
+{
+	if (argc < 2)
+	{
+		return FREInt(RESULT_DEVELOPER_ERROR);
+	}
+
+	int achievementId;
+	std::string reqCode;
+
+	bool isOk = FREGetInt32(argv[0], &achievementId);
+	isOk = isOk && FREGetString(argv[1], reqCode);
+
+	if (!isOk)
+		return FREInt(RESULT_DEVELOPER_ERROR);
+
+	std::thread mahta([=](int req_code) {
+		ArioAchievement_ResetStatus(achievementId, req_code, JsonCallback);
+	}, std::stoi(reqCode));
+	mahta.detach();
+
+	return FREInt(RESULT_OK);
+}
+
 int ConvertLockResult2ArioResult(int lockResult)
 {
 	switch (lockResult)
@@ -579,7 +651,7 @@ void ArioContextInitializer(void* extData, const uint8_t* ctxType, FREContext ct
 	// 	*numFunctions = sizeof(func) / sizeof(func[0]);
 
 
-	*numFunctions = 18;
+	*numFunctions = 21;
 
 	FRENamedFunction* func = (FRENamedFunction*)malloc(sizeof(FRENamedFunction) * (*numFunctions)); // * * :))))))
 
@@ -655,6 +727,18 @@ void ArioContextInitializer(void* extData, const uint8_t* ctxType, FREContext ct
 	func[17].name = (const uint8_t*)"GetGameAchievements";
 	func[17].functionData = NULL;
 	func[17].function = &GetGameAchievements;
+
+	func[18].name = (const uint8_t*)"GetStatus";
+	func[18].functionData = NULL;
+	func[18].function = &GetStatus;
+
+	func[19].name = (const uint8_t*)"Unlock";
+	func[19].functionData = NULL;
+	func[19].function = &Unlock;
+
+	func[20].name = (const uint8_t*)"ResetStatus";
+	func[20].functionData = NULL;
+	func[20].function = &ResetStatus;
 
 	*functionsToSet = func;
 	//MessageBox(NULL, L"ContextInitializer", L"caption", 0);

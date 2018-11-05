@@ -239,22 +239,54 @@ package com.ario.test{
 			ArioInterface.Achievement.GetGameAchievements(onAchievementsFinish);
 		}
 		public function onClick_btn_achievement_get_status(event:MouseEvent):void{
-			ArioInterface.Leaderboard.GetLeaderboards(onLeaderboardFinish);
-		}
-		public function onClick_btn_achievement_increment(event:MouseEvent):void{
-			ArioInterface.Leaderboard.GetLeaderboards(onLeaderboardFinish);
-		}
-		public function onClick_btn_achievement_set_step(event:MouseEvent):void{
-			ArioInterface.Leaderboard.GetLeaderboards(onLeaderboardFinish);
+			// finding achievement Id
+			var achievementIndex:int = FlexGlobals.topLevelApplication.comboBox_achievements.selectedIndex;
+			if(achievementIndex < 0) // there is no leaderboard
+			{
+				ShowText("No achievement selected! Please call Get achievement first and select a achievement ID");
+			}
+			else
+			{
+				var achievementId:int = array_achievements_obj[achievementIndex]["achievement_id"];
+				ArioInterface.Achievement.GetStatus(achievementId,onAsynchRecived);
+			}
 		}
 		public function onClick_btn_achievement_unlock(event:MouseEvent):void{
-			ArioInterface.Leaderboard.GetLeaderboards(onLeaderboardFinish);
+			// finding achievement Id
+			var achievementIndex:int = FlexGlobals.topLevelApplication.comboBox_achievements.selectedIndex;
+			if(achievementIndex < 0) // there is no leaderboard
+			{
+				ShowText("No achievement selected! Please call Get achievement first and select a achievement ID");
+			}
+			else
+			{
+				var achievementId:int = array_achievements_obj[achievementIndex]["achievement_id"];
+				ArioInterface.Achievement.Unlock(achievementId,onAsynchRecived);
+			}
 		}
+		// warning: do not use this function in development build
 		public function onClick_btn_achievement_reset(event:MouseEvent):void{
-			ArioInterface.Leaderboard.GetLeaderboards(onLeaderboardFinish);
+			// finding achievement Id
+			var achievementIndex:int = FlexGlobals.topLevelApplication.comboBox_achievements.selectedIndex;
+			if(achievementIndex < 0) // there is no leaderboard
+			{
+				ShowText("No achievement selected! Please call Get achievement first and select a achievement ID");
+			}
+			else
+			{
+				var achievementId:int = array_achievements_obj[achievementIndex]["achievement_id"];
+				ArioInterface.Achievement.ResetStatus(achievementId,onAsynchRecived);
+			}
 		}
+		public function onClick_btn_achievement_increment(event:MouseEvent):void{
+			
+		}
+		public function onClick_btn_achievement_set_step(event:MouseEvent):void{
+			
+		}
+		
 		public function onClick_btn_achievement_show(event:MouseEvent):void{
-			ArioInterface.Leaderboard.GetLeaderboards(onLeaderboardFinish);
+			
 		}
 		public function onAchievementsFinish(jsonMsg:String):void
 		{
