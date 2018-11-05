@@ -608,6 +608,62 @@ FREObject ResetStatus(FREContext ctx, void* functionData, uint32_t argc, FREObje
 	return FREInt(RESULT_OK);
 }
 
+FREObject Increment(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[])
+{
+	if (argc < 3)
+	{
+		return FREInt(RESULT_DEVELOPER_ERROR);
+	}
+
+	int achievementId, value;
+	std::string reqCode;
+
+	bool isOk = FREGetInt32(argv[0], &achievementId);
+	isOk = isOk && FREGetInt32(argv[1], &value);
+	isOk = isOk && FREGetString(argv[2], reqCode);
+
+	if (!isOk)
+		return FREInt(RESULT_DEVELOPER_ERROR);
+
+	std::thread mahta([=](int req_code) {
+		ArioAchievement_Increment(achievementId, value, req_code, JsonCallback);
+	}, std::stoi(reqCode));
+	mahta.detach();
+
+	return FREInt(RESULT_OK);
+}
+
+FREObject SetStep(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[])
+{
+	if (argc < 3)
+	{
+		return FREInt(RESULT_DEVELOPER_ERROR);
+	}
+
+	int achievementId, value;
+	std::string reqCode;
+
+	bool isOk = FREGetInt32(argv[0], &achievementId);
+	isOk = isOk && FREGetInt32(argv[1], &value);
+	isOk = isOk && FREGetString(argv[2], reqCode);
+
+	if (!isOk)
+		return FREInt(RESULT_DEVELOPER_ERROR);
+
+	std::thread mahta([=](int req_code) {
+		ArioAchievement_SetSteps(achievementId, value, req_code, JsonCallback);
+	}, std::stoi(reqCode));
+	mahta.detach();
+
+	return FREInt(RESULT_OK);
+}
+
+FREObject ShowAchievement(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[])
+{
+	ArioAchievement_ShowAchievements();
+	return FREObject();
+}
+
 int ConvertLockResult2ArioResult(int lockResult)
 {
 	switch (lockResult)
@@ -651,7 +707,7 @@ void ArioContextInitializer(void* extData, const uint8_t* ctxType, FREContext ct
 	// 	*numFunctions = sizeof(func) / sizeof(func[0]);
 
 
-	*numFunctions = 21;
+	*numFunctions = 24;
 
 	FRENamedFunction* func = (FRENamedFunction*)malloc(sizeof(FRENamedFunction) * (*numFunctions)); // * * :))))))
 
@@ -739,6 +795,18 @@ void ArioContextInitializer(void* extData, const uint8_t* ctxType, FREContext ct
 	func[20].name = (const uint8_t*)"ResetStatus";
 	func[20].functionData = NULL;
 	func[20].function = &ResetStatus;
+
+	func[21].name = (const uint8_t*)"Increment";
+	func[21].functionData = NULL;
+	func[21].function = &Increment;
+
+	func[22].name = (const uint8_t*)"SetStep";
+	func[22].functionData = NULL;
+	func[22].function = &SetStep;
+
+	func[23].name = (const uint8_t*)"ShowAchievement";
+	func[23].functionData = NULL;
+	func[23].function = &ShowAchievement;
 
 	*functionsToSet = func;
 	//MessageBox(NULL, L"ContextInitializer", L"caption", 0);

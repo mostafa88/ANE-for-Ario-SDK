@@ -279,14 +279,38 @@ package com.ario.test{
 			}
 		}
 		public function onClick_btn_achievement_increment(event:MouseEvent):void{
-			
+			// finding achievement Id
+			var achievementIndex:int = FlexGlobals.topLevelApplication.comboBox_achievements.selectedIndex;
+			if(achievementIndex < 0) // there is no leaderboard
+			{
+				ShowText("No achievement selected! Please call Get achievement first and select a achievement ID");
+			}
+			else
+			{
+				var achievementId:int = array_achievements_obj[achievementIndex]["achievement_id"];
+				// finding achievement step
+				var step:int = parseInt(FlexGlobals.topLevelApplication.input_achievements_value.text);
+				ArioInterface.Achievement.Increment(achievementId,step,onAsynchRecived);
+			}
 		}
 		public function onClick_btn_achievement_set_step(event:MouseEvent):void{
-			
+			// finding achievement Id
+			var achievementIndex:int = FlexGlobals.topLevelApplication.comboBox_achievements.selectedIndex;
+			if(achievementIndex < 0) // there is no leaderboard
+			{
+				ShowText("No achievement selected! Please call Get achievement first and select a achievement ID");
+			}
+			else
+			{
+				var achievementId:int = array_achievements_obj[achievementIndex]["achievement_id"];
+				// finding achievement step
+				var step:int = parseInt(FlexGlobals.topLevelApplication.input_achievements_value.text);
+				ArioInterface.Achievement.SetStep(achievementId,step,onAsynchRecived);
+			}
 		}
 		
 		public function onClick_btn_achievement_show(event:MouseEvent):void{
-			
+			ArioInterface.Achievement.ShowAchievement();
 		}
 		public function onAchievementsFinish(jsonMsg:String):void
 		{

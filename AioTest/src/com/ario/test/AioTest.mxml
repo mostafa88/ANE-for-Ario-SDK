@@ -3,8 +3,8 @@
 					   xmlns:s="library://ns.adobe.com/flex/spark" 
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
 					   title="Ario Test SDK"
-					   width="1030"
-					   minHeight="840"
+					   width="1050"
+					   minHeight="850"
 					   minWidth="800"
 					   initialize = "reportEvent(event)"
 					   preinitialize = "reportEvent(event)"
@@ -61,10 +61,13 @@
 			}
 		]]>
 	</fx:Script>
-	
+	<s:Scroller id="theScroller" width="100%" height="100%">
 	<s:VGroup horizontalAlign = "center" width = "100%" height = "30%"  paddingTop = "10" gap = "10" >
 		<s:Label id = "lblHeader" textAlign="center" fontSize = "20" text="Ario Sample Game To  Test Air SDK :)" width="80%" color = "#ffffff"  />
-		<s:TextArea id = "reportText" editable = "false" width = "60%" height = "200"  />
+		<s:HGroup>
+			<s:TextArea id = "reportText" editable = "false" width = "600" height = "200"  />
+			<s:Image source="@Embed('assets/ario_log.jpg')" width="200" height="200"/>
+		</s:HGroup>
 		<s:Button label = "clear text area" id = "btn_text_clear"  click = "arioTest.onClick_btn_clear(event)" />
 		
 		<!-- First Row -->
@@ -112,7 +115,6 @@
 			<s:VGroup  horizontalAlign = "center" width = "25%" height = "100%"  paddingTop = "10" gap = "10">
 				<s:Label id = "lbl_leaderboard" textAlign="center" fontSize = "20" text="Leaderboard Service" width="100%" color = "#ffffff"  />
 				<s:Button label = "Get leaderboards" id = "btn_leaderboard_get_leaderboards"  click = "arioTest.onClick_btn_leaderboard_get_leaderboards(event)" />
-				
 				<s:Group>  
 					<s:Rect width="100%" height="100%">  
 						<s:stroke>  
@@ -203,13 +205,14 @@
 					</s:VGroup>
 					<s:VGroup horizontalAlign = "contentJustify" width="80%">
 						<s:Button label = "Increment" id = "btn_achievement_increment"  click = "arioTest.onClick_btn_achievement_increment(event)" />
-						<s:Button label = "Set step id" id = "btn_achievement_set_step"  click = "arioTest.onClick_btn_achievement_set_step(event)" />
+						<s:Button label = "Set step" id = "btn_achievement_set_step"  click = "arioTest.onClick_btn_achievement_set_step(event)" />
 					</s:VGroup>
 				</s:HGroup>
 				<s:Button label = "Show Achievements" id = "btn_achievement_show"  click = "arioTest.onClick_btn_achievement_show(event)" />
 			</s:VGroup>
 		</s:HGroup>
 	</s:VGroup>
+	</s:Scroller>
 	
 	
 	

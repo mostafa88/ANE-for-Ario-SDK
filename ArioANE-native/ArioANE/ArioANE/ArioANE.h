@@ -62,6 +62,10 @@ FREObject GetGameAchievements(FREContext ctx, void* functionData, uint32_t argc,
 FREObject GetStatus(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
 FREObject Unlock(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
 FREObject ResetStatus(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
+FREObject Increment(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
+FREObject SetStep(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
+FREObject ShowAchievement(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
+
 
 // these function addressed in ANE "descriptor.xml" file
 extern "C" {
