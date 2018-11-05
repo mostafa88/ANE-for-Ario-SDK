@@ -3,7 +3,7 @@
 					   xmlns:s="library://ns.adobe.com/flex/spark" 
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
 					   title="Ario Test SDK"
-					   width="1000"
+					   width="1030"
 					   minHeight="840"
 					   minWidth="800"
 					   initialize = "reportEvent(event)"
@@ -67,7 +67,9 @@
 		<s:TextArea id = "reportText" editable = "false" width = "60%" height = "200"  />
 		<s:Button label = "clear text area" id = "btn_text_clear"  click = "arioTest.onClick_btn_clear(event)" />
 		
+		<!-- First Row -->
 		<s:HGroup verticalAlign="middle" width = "100%" height = "30%"  paddingLeft="10" gap = "10" paddingRight="10">
+			<!-- User Service -->
 			<s:VGroup horizontalAlign = "center" width = "25%" height = "100%"  paddingTop = "10" gap = "10">
 				<s:Label id = "lbl_user" textAlign="center" fontSize = "20" text="User Service" width="100%" color = "#ffffff"  />
 				<s:Button label = "check login" id = "btn_user_isLogin"  click = "arioTest.onClick_btn_user_isLogin(event)" />
@@ -76,11 +78,13 @@
 				<s:Button label = "user level" id = "btn_user_level"  click = "arioTest.onClick_btn_user_level(event)" />
 				<s:Button label = "profile" id = "btn_user_profile"  click = "arioTest.onClick_btn_user_profile(event)" />
 			</s:VGroup>
+			<!-- Lock Service -->
 			<s:VGroup horizontalAlign = "center" width = "25%" height = "100%"  paddingTop = "10" gap = "10">
 				<s:Label id = "lbl_lock" textAlign="center" fontSize = "20" text="Lock Service" width="80%" color = "#ffffff"  />
 				<s:Button label = "lock-synch" id = "btn_lock_synch"  click = "arioTest.onClick_btn_lock(event)" />
 				<s:Button label = "lock-asynch" id = "btn_lock_asynch"  click = "arioTest.onClick_btn_lock_asynch(event)" />
 			</s:VGroup>
+			<!-- In App Billing Service -->
 			<s:VGroup horizontalAlign = "justify" width = "50%" height = "100%"  paddingTop = "10" gap = "10">
 				<s:Label id = "lbl_IAB" textAlign="center" fontSize = "20" text="In App Billing Service" width="80%" color = "#ffffff"  />
 				<s:HGroup>
@@ -102,7 +106,9 @@
 				
 			</s:VGroup>
 		</s:HGroup>
+		<!--Second Row -->
 		<s:HGroup verticalAlign="middle" width = "100%" height = "30%"  paddingLeft="10" gap = "10" paddingRight="10">
+			<!-- Leaderboard Service -->
 			<s:VGroup  horizontalAlign = "center" width = "25%" height = "100%"  paddingTop = "10" gap = "10">
 				<s:Label id = "lbl_leaderboard" textAlign="center" fontSize = "20" text="Leaderboard Service" width="100%" color = "#ffffff"  />
 				<s:Button label = "Get leaderboards" id = "btn_leaderboard_get_leaderboards"  click = "arioTest.onClick_btn_leaderboard_get_leaderboards(event)" />
@@ -178,6 +184,29 @@
 					</s:HGroup>
 				</s:Group>
 				<s:Button label = "Show leaderboard" id = "btn_leaderboard_show"  click = "arioTest.onClick_btn_leaderboard_show_leaderboard(event)" />
+			</s:VGroup>
+			<!-- Achievement Service -->
+			<s:VGroup horizontalAlign = "contentJustify" width = "25%" height = "100%"  paddingTop = "10" gap = "10">
+				<s:Label id = "lbl_achievement" textAlign="center" fontSize = "20" text="Achievement Service" width="100%" color = "#ffffff"  />
+				<s:Button label = "Get game achievements" id = "btn_achievement_get"  click = "arioTest.onClick_btn_achievement_get_achievements(event)" />
+				<s:HGroup>
+					<s:Label id = "lbl_achievements" textAlign="center" fontSize = "15" text="achievements:" width="20%" color = "#5b9100"/>
+					<s:ComboBox  id = "comboBox_achievements"  dataProvider = "{arioTest.array_achievements_name}"  width = "30%" selectedIndex = "1"  labelField = "value" />
+					<s:Label id = "lbl_achievements_value" textAlign="center" fontSize = "15" text="value (set/increment):" width="30%" color = "#5b9100"/>
+					<s:TextInput id="input_achievements_value" text="1" width="20%" restrict="0-9" />
+				</s:HGroup>
+				<s:HGroup>
+					<s:VGroup horizontalAlign = "contentJustify" width="80%">
+						<s:Button label = "Get status" id = "btn_achievement_get_status"  click = "arioTest.onClick_btn_achievement_get_status(event)" />
+						<s:Button label = "Unlock" id = "btn_achievement_unlock"  click = "arioTest.onClick_btn_achievement_unlock(event)" />
+						<s:Button label = "Reset" id = "btn_achievement_reset"  click = "arioTest.onClick_btn_achievement_reset(event)" />
+					</s:VGroup>
+					<s:VGroup horizontalAlign = "contentJustify" width="80%">
+						<s:Button label = "Increment" id = "btn_achievement_increment"  click = "arioTest.onClick_btn_achievement_increment(event)" />
+						<s:Button label = "Set step id" id = "btn_achievement_set_step"  click = "arioTest.onClick_btn_achievement_set_step(event)" />
+					</s:VGroup>
+				</s:HGroup>
+				<s:Button label = "Show Achievements" id = "btn_achievement_show"  click = "arioTest.onClick_btn_achievement_show(event)" />
 			</s:VGroup>
 		</s:HGroup>
 	</s:VGroup>

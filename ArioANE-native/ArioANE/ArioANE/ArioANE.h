@@ -57,6 +57,8 @@ FREObject GetScores(FREContext ctx, void* functionData, uint32_t argc, FREObject
 FREObject GetMyRank(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
 FREObject SubmitScore(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
 FREObject ShowLeaderboard(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
+// Achievement functions
+FREObject GetGameAchievements(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[]);
 
 // these function addressed in ANE "descriptor.xml" file
 extern "C" {

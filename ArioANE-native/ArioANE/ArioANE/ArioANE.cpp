@@ -17,6 +17,7 @@
 #define ARIO_SDK
 #ifdef ARIO_SDK
 #include <api.h>
+#include <flat/flat_ario_achievement.h>
 #include <flat/flat_ario_iab_helper.h>
 #include <flat/flat_ario_leaderboard.h>
 #include <flat/flat_ario_achievement.h>
@@ -514,6 +515,27 @@ FREObject ShowLeaderboard(FREContext ctx, void* functionData, uint32_t argc, FRE
 	return FREObject();
 }
 
+FREObject GetGameAchievements(FREContext ctx, void* functionData, uint32_t argc, FREObject argv[])
+{
+	if (argc < 1)
+	{
+		return FREInt(RESULT_DEVELOPER_ERROR);
+	}
+
+	std::string reqCode;
+	bool isOk = FREGetString(argv[0], reqCode);
+
+	if (!isOk)
+		return FREInt(RESULT_DEVELOPER_ERROR);
+
+	std::thread mahta([=](int req_code) {
+		ArioAchievement_GetGameAchievements(req_code, JsonCallback);
+	}, std::stoi(reqCode));
+	mahta.detach();
+
+	return FREInt(RESULT_OK);
+}
+
 int ConvertLockResult2ArioResult(int lockResult)
 {
 	switch (lockResult)
@@ -557,7 +579,7 @@ void ArioContextInitializer(void* extData, const uint8_t* ctxType, FREContext ct
 	// 	*numFunctions = sizeof(func) / sizeof(func[0]);
 
 
-	*numFunctions = 17;
+	*numFunctions = 18;
 
 	FRENamedFunction* func = (FRENamedFunction*)malloc(sizeof(FRENamedFunction) * (*numFunctions)); // * * :))))))
 
@@ -629,6 +651,10 @@ void ArioContextInitializer(void* extData, const uint8_t* ctxType, FREContext ct
 	func[16].name = (const uint8_t*)"ShowLeaderboard";
 	func[16].functionData = NULL;
 	func[16].function = &ShowLeaderboard;
+
+	func[17].name = (const uint8_t*)"GetGameAchievements";
+	func[17].functionData = NULL;
+	func[17].function = &GetGameAchievements;
 
 	*functionsToSet = func;
 	//MessageBox(NULL, L"ContextInitializer", L"caption", 0);

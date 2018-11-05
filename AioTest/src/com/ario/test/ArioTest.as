@@ -32,6 +32,14 @@ package com.ario.test{
 		
 		public var array_leaderboards_Obj:ArrayCollection;
 		
+		// achievement data
+		[Bindable]
+		public var array_achievements_name:ArrayCollection;
+		
+		public var array_achievements_obj:ArrayCollection;
+		
+		
+		
 		public function ShowText(text:String):void{
 			FlexGlobals.topLevelApplication.reportText.text += text + "\n";
 		}
@@ -196,7 +204,6 @@ package com.ario.test{
 		public function onClick_btn_leaderboard_show_leaderboard(event:MouseEvent):void{
 			ArioInterface.Leaderboard.ShowLeaderboard();
 		}
-		
 		private function onLeaderboardFinish(msg:String):void
 		{
 			var data:Object = JSON.parse(msg);
@@ -227,7 +234,58 @@ package com.ario.test{
 			onAsynchRecived(msg);
 		}
 		
-		
+		////////////////////////////// Achievement buttons /////////////////////////////// 
+		public function onClick_btn_achievement_get_achievements(event:MouseEvent):void{
+			ArioInterface.Achievement.GetGameAchievements(onAchievementsFinish);
+		}
+		public function onClick_btn_achievement_get_status(event:MouseEvent):void{
+			ArioInterface.Leaderboard.GetLeaderboards(onLeaderboardFinish);
+		}
+		public function onClick_btn_achievement_increment(event:MouseEvent):void{
+			ArioInterface.Leaderboard.GetLeaderboards(onLeaderboardFinish);
+		}
+		public function onClick_btn_achievement_set_step(event:MouseEvent):void{
+			ArioInterface.Leaderboard.GetLeaderboards(onLeaderboardFinish);
+		}
+		public function onClick_btn_achievement_unlock(event:MouseEvent):void{
+			ArioInterface.Leaderboard.GetLeaderboards(onLeaderboardFinish);
+		}
+		public function onClick_btn_achievement_reset(event:MouseEvent):void{
+			ArioInterface.Leaderboard.GetLeaderboards(onLeaderboardFinish);
+		}
+		public function onClick_btn_achievement_show(event:MouseEvent):void{
+			ArioInterface.Leaderboard.GetLeaderboards(onLeaderboardFinish);
+		}
+		public function onAchievementsFinish(jsonMsg:String):void
+		{
+			var data:Object = JSON.parse(jsonMsg);
+			if(data.hasOwnProperty("result"))
+			{
+				var result:int = data["result"];
+				if(result == ArioResultCode.RESULT_OK)
+				{
+					
+					array_achievements_name.removeAll();
+					array_achievements_obj.removeAll();
+					var count:int =  data["result_number"];
+					if(data.hasOwnProperty("message"))
+					{
+						var messageArray:Array = data["message"];
+						
+						for(  var i:int = 0 ; i < count ; i++)
+						{
+							var achiev:Object = messageArray[i];
+							array_achievements_name.addItem(achiev["name"]);
+							array_achievements_obj.addItem(achiev);
+						}
+						array_achievements_name.refresh();
+						FlexGlobals.topLevelApplication.comboBox_achievements.selectedIndex = 0;
+						
+					}
+				}	
+			}
+			onAsynchRecived(jsonMsg);
+		}
 		
 		
 		public function onAsynchRecived(msg:String): void
@@ -265,6 +323,10 @@ package com.ario.test{
 				
 				array_timeFrame = new ArrayCollection(["DAILY", "WEEKLY","ALL_TIME"]);
 				FlexGlobals.topLevelApplication.comboBox_timeFrame.selectedIndex = 2;
+				
+				// init achievemetn arrays
+				array_achievements_name = new ArrayCollection();
+				array_achievements_obj = new ArrayCollection();
 			}
 		}
 		
