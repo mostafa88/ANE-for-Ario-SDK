@@ -5,8 +5,8 @@ PUSHD %~dp0
 ECHO *************************************************************************************
 REM Copy and overwrite ArioANE.dll from native project to platform folder
 SET DLL_FILE_NAME=ArioANE.dll
-ECHO COPYING %~dp0..\ArioANE-native\ArioANE\Debug\%DLL_FILE_NAME% TO %~dp0.\platform\%DLL_FILE_NAME%
-COPY /Y %~dp0..\ArioANE-native\ArioANE\Debug\%DLL_FILE_NAME%  %~dp0.\platform\%DLL_FILE_NAME%
+ECHO COPYING %~dp0..\ArioANE-native\ArioANE\Release\%DLL_FILE_NAME% TO %~dp0.\platform\%DLL_FILE_NAME%
+COPY /Y %~dp0..\ArioANE-native\ArioANE\Release\%DLL_FILE_NAME%  %~dp0.\platform\%DLL_FILE_NAME%
 
 ECHO *************************************************************************************
 REM Extract library.swf form ArioANE.swc to platform folder
