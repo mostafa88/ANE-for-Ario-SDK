@@ -3,10 +3,9 @@
 An AIR Native Extension for Ario SDK that used by Adobe Air developers.
 
 # Project Structore
--
- --AioTest
- --ArioANE
- --ArioANE-native
+AioTest -> sample game
+ArioANE -> air library
+ArioANE-native -> c++ side library
 
 
 # Building 
